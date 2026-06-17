@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Weones Pro - Los Weones de las Empanadas</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:#0a0a0a;color:#fff;padding:12px;min-height:100vh;transition:all 0.3s}
+    body.modo-prueba{background:#001a00}
+ .container{max-width:500px;margin:0 auto}
+ .login-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;transition:all 0.3s}
+    body.modo-prueba.login-screen{background:#001a00}
+ .login-box{background:#1a1a;padding:30px;border-radius:20px;border:2px solid #ff6600;text-align:center;max-width:400px;width:100%;transition:all 0.3s}
+    body.modo-prueba.login-box{background:#002200;border-color:#00aa00}
+ .logo{width:120px;height:120px;border-radius:50%;margin:0 auto 15px;background:#000;border:3px solid #ff6600;display:flex;align-items:center;justify-content:center;font-size:48px;object-fit:cover;transition:all 0.3s}
+    body.modo-prueba.logo{border-color:#00aa00}
+ .login-box h1{font-size:24px;color:#ff6600;margin-bottom:20px;transition:all 0.3s}
+    body.modo-prueba.login-box h1{color:#00ff00}
+ .usuario-btn{width:100%;padding:16px;background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);border:2px solid #333;border-radius:14px;color:#fff;font-size:16px;font-weight:bold;margin-bottom:10px;cursor:pointer;transition:all 0.3s}
+    body.modo-prueba.usuario-btn{background:linear-gradient(135deg,#002200 0%,#003300 100%);border-color:#00aa00}
+ .usuario-btn:active{transform:scale(0.98);border-color:#ff6600}
+    body.modo-prueba.usuario-btn:active{border-color:#00ff00}
+ .header{background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);padding:15px;border-radius:16px;margin-bottom:12px;border:2px solid #ff6600;display:flex;align-items:center;gap:12px;transition:all 0.3s}
+    body.modo-prueba.header{border-color:#00aa00;background:linear-gradient(135deg,#003300 0%,#004400 100%)}
+ .header-logo{width:50px;height:50px;border-radius:50%;border:2px solid #ff6600;transition:all 0.3s;display:flex;align-items:center;justify-content:center;font-size:24px;background:#000;object-fit:cover}
+    body.modo-prueba.header-logo{border-color:#00aa00}
+ .header-info{flex:1}
+ .header h1{font-size:16px;color:#ff6600;margin-bottom:2px;transition:all 0.3s}
+    body.modo-prueba.header h1{color:#00ff00}
+ .header.sub{font-size:10px;color:#888}
+ .btn-logout{padding:8px 12px;background:#333;border:none;border-radius:8px;color:#fff;font-size:11px;cursor:pointer;transition:all 0.3s}
+    body.modo-prueba.btn-logout{background:#004400}
+ .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+ .tab{padding:9px 4px;background:#1a1a1a;border:2px solid #333;border-radius:10px;color:#888;font-size:10px;font-weight:bold;cursor:pointer;text-align:center;transition:all 0.3s}
+    body.modo-prueba.tab{background:#002200;border-color:#004400}
+ .tab.activo{background:linear-gradient(135deg,#ff6600 0%,#ff8533 100%);color:#000;border-color:#ff6600}
+    body.modo-prueba.tab.activo{background:linear-gradient(135deg,#00aa00 0%,#00cc00 100%);border-color:#00aa00;color:#fff}
+ .card{background:#1a1a1a;padding:16px;border-radius:16px;margin-bottom:10px;border:1px solid #333;transition:all 0.3s}
+    body.modo-prueba.card{border-color:#00aa00;background:#001100}
+ .card h2{font-size:13px;color:#ff6600;margin-bottom:10px;text-transform:uppercase;transition:all 0.3s}
+    body.modo-prueba.card h2{color:#00ff00}
+ .input-grupo{margin-bottom:10px}
+ .input-grupo label{display:block;color:#ff6600;font-size:11px;margin-bottom:4px;font-weight:600;transition:all 0.3s}
+    body.modo-prueba.input-grupo label{color:#00ff00}
+ .input-grupo input,.input-grupo select{width:100%;padding:11px;background:#0a0a0a;border:2px solid #333;border-radius:10px;color:#fff;font-size:14px;outline:0;transition:all 0.3s}
+    body.modo-prueba.input-grupo input,body.modo-prueba.input-grupo select{background:#000a00;border-color:#004400}
+ .input-grupo input:focus,.input-grupo select:focus{border-color:#ff6600}
+    body.modo-prueba.input-grupo input:focus,body.modo-prueba.input-grupo select:focus{border-color:#00aa00}
+ .btn{width:100%;padding:14px;background:linear-gradient(135deg,#ff6600 0%,#ff8533 100%);border:none;border-radius:12px;color:#000;font-size:13px;font-weight:bold;cursor:pointer;margin-top:6px;text-transform:uppercase;transition:all 0.3s}
+    body.modo-prueba.btn{background:linear-gradient(135deg,#00aa00 0%,#00cc00 100%);color:#fff}
+ .btn:active{transform:scale(0.98)}
+ .btn-secundario{background:linear-gradient(135deg,#444 0%,#666 100%);color:#fff}
+    body.modo-prueba.btn-secundario{background:linear-gradient(135deg,#004400 0%,#006600 100%)}
+ .btn-verde{background:linear-gradient(135deg,#00aa00 0%,#00cc00 100%);color:#fff}
+ .btn-prueba{background:linear-gradient(135deg,#0066cc 0%,#0088ff 100%);color:#fff}
+    body.modo-prueba.btn-prueba{background:linear-gradient(135deg,#00aa00 0%,#00cc00 100%)}
+ .btn-rojo{background:linear-gradient(135deg,#aa0000 0%,#cc0000 100%);color:#fff}
+    #qrContainer{text-align:center;margin-top:12px}
+    #qrImagen{width:100%;max-width:280px;height:auto;border-radius:12px;background:white;padding:12px;margin:8px auto;box-shadow:0 8px 25px rgba(255,102,0,0.3);transition:all 0.3s}
+    body.modo-prueba #qrImagen{box-shadow:0 8px 25px rgba(0,255,0,0.4)}
+ .datos-qr{background:#0a0a0a;padding:12px;border-radius:12px;margin-top:10px;font-size:10px;line-height:1.6;text-align:left;transition:all 0.3s}
+    body.modo-prueba.datos-qr{background:#000a00}
+ .datos-qr b{color:#ff6600;transition:all 0.3s}
+    body.modo-prueba.datos-qr b{color:#00ff00}
+ .monto-grande{font-size:28px;color:#00ff00;font-weight:bold;text-align:center;margin:8px 0}
+ .semaforo{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+ .semaforo-item{padding:9px;background:#0a0a0a;border-radius:10px;text-align:center;border:2px solid #333;transition:all 0.3s}
+    body.modo-prueba.semaforo-item{background:#000a00}
+ .semaforo-item.verde{border-color:#00ff00;background:rgba(0,255,0,0.1)}
+ .semaforo-item.amarillo{border-color:#ffaa00;background:rgba(255,170,0,0.1)}
+ .semaforo-item.rojo{border-color:#ff3333;background:rgba(255,51,0.1)}
+ .semaforo-item.bloqueado{border-color:#ff0000;background:rgba(255,0,0,0.2);animation:parpadeo 1s infinite}
+    @keyframes parpadeo{0%,100%{opacity:1}50%{opacity:0.5}}
+ .semaforo-item.banco{font-size:9px;color:#888;margin-bottom:2px}
+ .semaforo-item.contador{font-size:12px;font-weight:bold}
+ .folio-badge{background:#ff6600;color:#000;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:bold;display:inline-block;margin-bottom:6px;transition:all 0.3s}
+    body.modo-prueba.folio-badge{background:#00aa00;color:#fff}
+ .modo-prueba-badge{background:#00aa00;color:#fff;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:bold;display:inline-block;margin-bottom:10px;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+ .oculto{display:none!important}
+ .alerta{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#00aa00;color:#fff;padding:10px 18px;border-radius:10px;font-weight:bold;z-index:99999;animation:slideDown 0.3s;font-size:12px}
+    @keyframes slideDown{from{transform:translateX(-50%) translateY(-100px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+ .historial-item{padding:9px;background:#0a0a0a;border-radius:10px;margin-bottom:6px;border-left:3px solid #ff6600;font-size:10px;transition:all 0.3s}
+    body.modo-prueba.historial-item{border-left-color:#00aa00;background:#000a00}
+ .cuenta-item{padding:10px;background:#0a0a0a;border-radius:10px;margin-bottom:8px;border:1px solid #333;display:flex;justify-content:space-between;align-items:center;transition:all 0.3s}
+    body.modo-prueba.cuenta-item{background:#000a00;border-color:#004400}
+ .cuenta-info{flex:1}
+ .cuenta-banco{font-size:12px;color:#ff6600;font-weight:bold;transition:all 0.3s}
+    body.modo-prueba.cuenta-banco{color:#00ff00}
+ .cuenta-numero{font-size:10px;color:#888}
+ .btn-eliminar{padding:6px 10px;background:#aa0000;border:none;border-radius:6px;color:#fff;font-size:10px;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-box">
+      <!-- LOGO: Cambia el emoji por <img src="tu-logo.png"> si quieres -->
+      <div class="logo">🥟</div>
+      <h1>QR WEONES PRO</h1>
+      <div style="color:#888;font-size:12px;margin-bottom:20px">Selecciona tu usuario</div>
+      <div id="listaUsuarios"></div>
+    </div>
+  </div>
+
+  <div class="container oculto" id="appContainer">
+    <div class="header">
+      <!-- LOGO: Cambia el emoji por <img src="tu-logo.png" class="header-logo"> si quieres -->
+      <div class="header-logo">🥟</div>
+      <div class="header-info">
+        <h1>QR WEONES PRO</h1>
+        <div class="sub" id="usuarioActual">Usuario: -</div>
+      </div>
+      <button class="btn-logout" onclick="cerrarSesion()">SALIR</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab activo" onclick="cambiarTab('cobrar')">COBRAR</button>
+      <button class="tab" onclick="cambiarTab('semaforo')">SII</button>
+      <button class="tab" onclick="cambiarTab('historial')">HISTORIAL</button>
+      <button class="tab" onclick="cambiarTab('cuentas')">CUENTAS</button>
+    </div>
+
+    <div id="tabCobrar">
+      <div class="card">
+        <h2>💰 GENERAR COBRO</h2>
+        <div class="input-grupo">
+          <label>BANCO DESTINO</label>
+          <select id="banco" onchange="actualizarSemaforoPreview()"></select>
+        </div>
+        <div class="input-grupo">
+          <label>MONTO A COBRAR</label>
+          <input type="number" id="monto" placeholder="7500" inputmode="numeric">
+        </div>
+        <div class="input-grupo">
+          <label>REFERENCIA</label>
+          <select id="referenciaSelect" onchange="toggleReferenciaCustom()">
+            <option value="">-- Selecciona --</option>
+            <option value="🥟 Empanadas">🥟 Empanadas</option>
+            <option value="🥫 Latas">🥫 Latas</option>
+            <option value="otro">✏️ Escribir otra...</option>
+          </select>
+          <input type="text" id="referenciaCustom" placeholder="Ej: Completo" class="oculto" style="margin-top:6px">
+        </div>
+        <div id="semaforoPreview"></div>
+        <button class="btn btn-verde" onclick="generarQR(false)">💰 GENERAR + REGISTRAR</button>
+        <button class="btn btn-prueba" onclick="generarQR(true)">🧪 QR PRUEBA - LIQUIDACIÓN</button>
+      </div>
+
+      <div id="qrContainer" class="card oculto">
+        <div id="badgeContainer"></div>
+        <div class="monto-grande" id="montoDisplay">$0</div>
+        <img id="qrImagen" src="">
+        <div class="datos-qr" id="datosQR"></div>
+        <button class="btn btn-verde" onclick="confirmarPago()" id="btnConfirmar">✅ PAGO CONFIRMADO</button>
+        <button class="btn btn-rojo" onclick="cancelarQR()" id="btnCancelar">❌ CANCELAR QR</button>
+        <button class="btn btn-secundario" onclick="nuevoQR()">🔄 NUEVO QR</button>
+        <button class="btn btn-secundario oculto" onclick="salirModoPrueba()" id="btnSalirPrueba">⬅️ SALIR MODO PRUEBA</button>
+      </div>
+    </div>
+
+    <div id="tabSemaforo" class="oculto">
+      <div class="card">
+        <h2>🚦 ESTADO SII</h2>
+        <div class="semaforo" id="semaforoCompleto"></div>
+        <button class="btn btn-secundario" onclick="resetearBancoManual()">🗑️ RESET MANUAL</button>
+      </div>
+    </div>
+
+    <div id="tabHistorial" class="oculto">
+      <div class="card">
+        <h2>📋 ÚLTIMOS COBROS</h2>
+        <div id="listaHistorial"></div>
+        <button class="btn btn-secundario" onclick="exportarCSV()">📥 EXPORTAR CSV</button>
+      </div>
+    </div>
+
+    <div id="tabCuentas" class="oculto">
+      <div class="card">
+        <h2>🏦 MIS CUENTAS</h2>
+        <div id="listaCuentas"></div>
+        <button class="btn" onclick="mostrarFormCuenta()">+ AGREGAR CUENTA</button>
+      </div>
+
+      <div id="formCuenta" class="card oculto">
+        <h2>➕ NUEVA CUENTA</h2>
+        <div class="input-grupo">
+          <label>BANCO</label>
+          <select id="nuevaCuentaBanco">
+            <option value="cuenta_rut">Cuenta RUT - Banco Estado</option>
+            <option value="banco_estado">Chequera Electrónica - Banco Estado</option>
+            <option value="banco_chile">Cuenta Vista - Banco de Chile</option>
+            <option value="bci">Cuenta Corriente - BCI</option>
+            <option value="mercado_pago">Mercado Pago</option>
+            <option value="tenpo">Tenpo Prepago</option>
+            <option value="mach">MACH</option>
+            <option value="copec_pay">Copec Pay</option>
+          </select>
+        </div>
+        <div class="input-grupo">
+          <label>N° CUENTA / CVU / TELÉFONO</label>
+          <input type="text" id="nuevaCuentaNumero" placeholder="12345678">
+        </div>
+        <button class="btn btn-verde" onclick="agregarCuenta()">GUARDAR CUENTA</button>
+        <button class="btn btn-secundario" onclick="cancelarFormCuenta()">CANCELAR</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="alerta" class="alerta oculto"></div>
+
+  <script>
+    const USUARIOS_DEFAULT = {
+      'marcelo': {
+        nombre: 'Marcelo',
+        rut: '12.082.344-2',
+        nombreCompleto: 'MARCELO ANTONIO PEREZ FUENTES',
+        email: 'mperez@emporiodonnino.cl',
+        prefijo: 'LWE',
+        cuentas: [
+          { id: 'tenpo_1', banco: 'Tenpo', tipo: 'Cuenta Vista', numero: '111112082344' },
+          { id: 'cuenta_rut_1', banco: 'Banco Estado', tipo: 'CuentaRUT', numero: '12082344' },
+          { id: 'mercado_pago_1', banco: 'Mercado Pago', tipo: 'Cuenta Vista', numero: '1043699387' },
+          { id: 'bci_1', banco: 'BCI', tipo: 'Cuenta Corriente', numero: '777912082344' },
+          { id: 'banco_chile_1', banco: 'Banco de Chile', tipo: 'Cuenta Vista', numero: '00-034-48261-53' }
+        ]
+      },
+      'nataly': {
+        nombre: 'Nataly',
+        rut: '11.111-1',
+        nombreCompleto: 'Nataly Ejemplo',
+        email: 'nataly@ejemplo.cl',
+        prefijo: 'NTY',
+        cuentas: []
+      },
+      'krishna': {
+        nombre: 'Krishna',
+        rut: '22.222.222-2',
+        nombreCompleto: 'Krishna Ejemplo',
+        email: 'krishna@ejemplo.cl',
+        prefijo: 'KRS',
+        cuentas: []
+      }
+    };
+
+    const BANCOS_INFO = {
+      'cuenta_rut': { nombre: 'Banco Estado', tipo: 'CuentaRUT' },
+      'banco_estado': { nombre: 'Banco Estado', tipo: 'Chequera Electrónica' },
+      'banco_chile': { nombre: 'Banco de Chile', tipo: 'Cuenta Vista' },
+      'bci': { nombre: 'BCI', tipo: 'Cuenta Corriente' },
+      'mercado_pago': { nombre: 'Mercado Pago', tipo: 'Cuenta Vista' },
+      'tenpo': { nombre: 'Tenpo', tipo: 'Cuenta Vista' },
+      'mach': { nombre: 'MACH', tipo: 'Cuenta Vista' },
+      'copec_pay': { nombre: 'Copec Pay', tipo: 'Cuenta Digital' }
+    };
+
+    let usuarioActual = null;
+    let qrActual = '';
+    let ventaPendiente = null;
+    let esPrueba = false;
+
+    const DB = {
+      get: (k, d = null) => {
+        try { return JSON.parse(localStorage.getItem(k) || JSON.stringify(d)); }
+        catch(e) { return d; }
+      },
+      set: (k, v) => {
+        try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {}
+      },
+      getUsuarios: () => DB.get('qr_usuarios', USUARIOS_DEFAULT),
+      setUsuarios: (v) => DB.set('qr_usuarios', v),
+      getContadores: (u) => DB.get(`qr_sii_${u}`, {}),
+      setContadores: (u, v) => DB.set(`qr_sii_${u}`, v),
+      getHistorial: (u) => DB.get(`qr_hist_${u}`, []),
+      setHistorial: (u, v) => DB.set(`qr_hist_${u}`, v),
+      getFolio: (u) => DB.get(`qr_folio_${u}`, 0),
+      setFolio: (u, v) => DB.set(`qr_folio_${u}`, v),
+      getSesion: () => DB.get('qr_sesion', null),
+      setSesion: (v) => DB.set('qr_sesion', v)
+    };
+
+    function iniciarApp() {
+      DB.setUsuarios(USUARIOS_DEFAULT);
+      const sesion = DB.getSesion();
+      if (sesion) cargarUsuario(sesion);
+      else mostrarLogin();
+    }
+
+    function mostrarLogin() {
+      const usuarios = DB.getUsuarios();
+      const html = Object.keys(usuarios).map(key =>
+        `<button class="usuario-btn" onclick="seleccionarUsuario('${key}')">${usuarios[key].nombre}</button>`
+      ).join('');
+      document.getElementById('listaUsuarios').innerHTML = html;
+      document.getElementById('loginScreen').classList.remove('oculto');
+      document.getElementById('appContainer').classList.add('oculto');
+    }
+
+    function seleccionarUsuario(key) {
+      DB.setSesion(key);
+      cargarUsuario(key);
+      document.getElementById('loginScreen').classList.add('oculto');
+      document.getElementById('appContainer').classList.remove('oculto');
+    }
+
+    function cargarUsuario(key) {
+      const usuarios = DB.getUsuarios();
+      usuarioActual = { key,...usuarios[key] };
+      document.getElementById('usuarioActual').textContent = `Usuario: ${usuarioActual.nombre}`;
+      document.getElementById('appContainer').classList.remove('oculto');
+      cargarCuentasSelect();
+      actualizarSemaforoPreview();
+      renderSemaforoCompleto();
+      renderHistorial();
+      renderCuentas();
+    }
+
+    function cerrarSesion() {
+      DB.setSesion(null);
+      usuarioActual = null;
+      document.body.classList.remove('modo-prueba');
+      mostrarLogin();
+    }
+
+    function cargarCuentasSelect() {
+      const select = document.getElementById('banco');
+      if (!usuarioActual || usuarioActual.cuentas.length === 0) {
+        select.innerHTML = '<option value="">-- Agrega una cuenta primero --</option>';
+      } else {
+        select.innerHTML = usuarioActual.cuentas.map(c =>
+          `<option value="${c.id}">${c.banco} - ${c.tipo}</option>`
+        ).join('');
+      }
+    }
+
+    function cambiarTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('activo'));
+      event.target.classList.add('activo');
+      ['cobrar','semaforo','historial','cuentas'].forEach(t => {
+        document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('oculto', t!== tab);
+      });
+      if (tab === 'semaforo') renderSemaforoCompleto();
+      if (tab === 'historial') renderHistorial();
+      if (tab === 'cuentas') renderCuentas();
+    }
+
+    function mostrarAlerta(msg, ok = true) {
+      const a = document.getElementById('alerta');
+      a.textContent = msg;
+      a.style.background = ok? '#00aa00' : '#ff3333';
+      a.classList.remove('oculto');
+      setTimeout(() => a.classList.add('oculto'), 2000);
+    }
+
+    function getContadorBanco(bancoId) {
+      const contadores = DB.getContadores(usuarioActual.key);
+      const hoy = new Date();
+      const mesKey = hoy.getMonth() + '-' + hoy.getFullYear();
+      const semestreKey = Math.floor(hoy.getMonth()/6) + '-' + hoy.getFullYear();
+      if (!contadores[bancoId] || contadores[bancoId].mes!== mesKey) {
+        contadores[bancoId] = { mensual: 0, semestral: 0, mes: mesKey, semestre: semestreKey };
+        DB.setContadores(usuarioActual.key, contadores);
+      }
+      return contadores[bancoId];
+    }
+
+    function actualizarSemaforoPreview() {
+      const bancoId = document.getElementById('banco').value;
+      if (!bancoId) {
+        document.getElementById('semaforoPreview').innerHTML = '';
+        return;
+      }
+      const cont = getContadorBanco(bancoId);
+      const cuenta = usuarioActual.cuentas.find(c => c.id === bancoId);
+      let clase = 'verde';
+      if (cont.mensual >= 50 || cont.semestral >= 100) clase = 'bloqueado';
+      else if (cont.mensual >= 40 || cont.semestral >= 80) clase = 'rojo';
+      else if (cont.mensual >= 30 || cont.semestral >= 60) clase = 'amarillo';
+      document.getElementById('semaforoPreview').innerHTML = `<div class="semaforo-item ${clase}" style="margin-top:10px">
+        <div class="banco">${cuenta.banco.toUpperCase()}</div>
+        <div class="contador">${cont.mensual}/50 mes | ${cont.semestral}/100 sem</div>
+      </div>`;
+    }
+
+    function toggleReferenciaCustom() {
+      const select = document.getElementById('referenciaSelect');
+      const custom = document.getElementById('referenciaCustom');
+      custom.classList.toggle('oculto', select.value!== 'otro');
+    }
+
+    function getReferencia() {
+      const select = document.getElementById('referenciaSelect');
+      if (select.value === 'otro') return document.getElementById('referenciaCustom').value.trim();
+      return select.value;
+    }
+
+    function generarQR(prueba) {
+      const bancoId = document.getElementById('banco').value;
+      const monto = parseInt(document.getElementById('monto').value);
+      const ref = getReferencia();
+      if (!bancoId) { mostrarAlerta('Selecciona un banco', false); return; }
+      if (!monto || monto <= 0) { mostrarAlerta('Ingresa un monto válido', false); return; }
+      esPrueba = prueba;
+      document.body.classList.toggle('modo-prueba', prueba);
+      const cont = getContadorBanco(bancoId);
+      if (!prueba && (cont.mensual >= 50 || cont.semestral >= 100)) {
+        mostrarAlerta(`⛔ BLOQUEADO: ${cont.mensual}/50`, false);
+        return;
+      }
+      const cuenta = usuarioActual.cuentas.find(c => c.id === bancoId);
+      const folio = prueba? 'PRUEBA' : `${usuarioActual.prefijo}-${String(DB.getFolio(usuarioActual.key) + 1).padStart(3, '0')}`;
+      const textoQR = `${cuenta.banco}
+${cuenta.tipo}
+RUT: ${usuarioActual.rut}
+${usuarioActual.nombreCompleto}
+N°: ${cuenta.numero}
+Email: ${usuarioActual.email}
+Monto: $${monto.toLocaleString('es-CL')}
+Ref: ${folio}
+${ref? `Nota: ${ref}` : ''}`;
+      qrActual = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(textoQR)}`;
+      ventaPendiente = { bancoId, cuenta, monto, ref, folio, fecha: new Date().toISOString() };
+      document.getElementById('badgeContainer').innerHTML = prueba
+   ? '<div class="modo-prueba-badge">🟢 MODO PRUEBA - LIQUIDACIÓN - NO REGISTRA</div>'
+        : `<div class="folio-badge">${folio}</div>`;
+      document.getElementById('montoDisplay').textContent = `$${monto.toLocaleString('es-CL')}`;
+      document.getElementById('qrImagen').src = qrActual;
+      document.getElementById('datosQR').innerHTML = `
+        <b>Banco:</b> ${cuenta.banco} - ${cuenta.tipo}<br>
+        <b>N°:</b> ${cuenta.numero}<br>
+        <b>RUT:</b> ${usuarioActual.rut}<br>
+        <b>Folio:</b> ${folio}<br>
+        ${ref? `<b>Nota:</b> ${ref}<br>` : ''}
+        ${prueba? '<b style="color:#00ff00">⚠️ MODO PRUEBA - No afecta contadores SII</b>' : ''}
+      `;
+      document.getElementById('btnConfirmar').style.display = prueba? 'none' : 'block';
+      document.getElementById('btnCancelar').style.display = prueba? 'none' : 'block';
+      document.getElementById('btnSalirPrueba').classList.toggle('oculto',!prueba);
+      document.getElementById('qrContainer').classList.remove('oculto');
+      document.getElementById('qrContainer').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function confirmarPago() {
+      if (!ventaPendiente || esPrueba) return;
+      const contadores = DB.getContadores(usuarioActual.key);
+      const bancoId = ventaPendiente.bancoId;
+      contadores[bancoId].mensual++;
+      contadores[bancoId].semestral++;
+      DB.setContadores(usuarioActual.key, contadores);
+      const historial = DB.getHistorial(usuarioActual.key);
+      historial.unshift(ventaPendiente);
+      DB.setHistorial(usuarioActual.key, historial.slice(0, 100));
+      DB.setFolio(usuarioActual.key, DB.getFolio(usuarioActual.key) + 1);
+      mostrarAlerta(`✅ Registrado: ${ventaPendiente.folio}`, true);
+      nuevoQR();
+      actualizarSemaforoPreview();
+    }
+
+    function cancelarQR() {
+      mostrarAlerta('QR cancelado - No se registró', true);
+      nuevoQR();
+    }
+
+    function nuevoQR() {
+      document.getElementById('monto').value = '';
+      document.getElementById('referenciaSelect').value = '';
+      document.getElementById('referenciaCustom').value = '';
+      document.getElementById('referenciaCustom').classList.add('oculto');
+      document.getElementById('qrContainer').classList.add('oculto');
+      document.body.classList.remove('modo-prueba');
+      document.getElementById('btnSalirPrueba').classList.add('oculto');
+      ventaPendiente = null;
+      esPrueba = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function salirModoPrueba() {
+      document.body.classList.remove('modo-prueba');
+      document.getElementById('qrContainer').classList.add('oculto');
+      document.getElementById('btnSalirPrueba').classList.add('oculto');
+      document.getElementById('monto').value = '';
+      document.getElementById('referenciaSelect').value = '';
+      document.getElementById('referenciaCustom').value = '';
+      document.getElementById('referenciaCustom').classList.add('oculto');
+      ventaPendiente = null;
+      esPrueba = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      mostrarAlerta('Saliste del modo prueba', true);
+    }
+
+    function renderSemaforoCompleto() {
+      const div = document.getElementById('semaforoCompleto');
+      if (!usuarioActual || usuarioActual.cuentas.length === 0) {
+        div.innerHTML = '<div style="text-align:center;color:#666;padding:20px">Agrega cuentas primero</div>';
+        return;
+      }
+      div.innerHTML = '';
+      usuarioActual.cuentas.forEach(cuenta => {
+        const cont = getContadorBanco(cuenta.id);
+        let clase = 'verde';
+        if (cont.mensual >= 50 || cont.semestral >= 100) clase = 'bloqueado';
+        else if (cont.mensual >= 40 || cont.semestral >= 80) clase = 'rojo';
+        else if (cont.mensual >= 30 || cont.semestral >= 60) clase = 'amarillo';
+        div.innerHTML += `<div class="semaforo-item ${clase}">
+          <div class="banco">${cuenta.banco}</div>
+          <div class="contador">${cont.mensual}/50</div>
+          <div style="font-size:9px;color:#666">${cont.semestral}/100 sem</div>
+        </div>`;
+      });
+    }
+
+    function renderHistorial() {
+      const historial = DB.getHistorial(usuarioActual.key);
+      const div = document.getElementById('listaHistorial');
+      if (historial.length === 0) {
+        div.innerHTML = '<div style="text-align:center;color:#666;padding:20px">Sin cobros aún</div>';
+        return;
+      }
+      div.innerHTML = historial.slice(0, 20).map(v => `
+        <div class="historial-item">
+          <b style="color:#ff6600">${v.folio}</b> - $${v.monto.toLocaleString('es-CL')}<br>
+          ${v.cuenta.banco} | ${new Date(v.fecha).toLocaleString('es-CL')}<br>
+          ${v.ref? `Nota: ${v.ref}` : ''}
+        </div>
+      `).join('');
+    }
+
+    function renderCuentas() {
+      const div = document.getElementById('listaCuentas');
+      if (!usuarioActual || usuarioActual.cuentas.length === 0) {
+        div.innerHTML = '<div style="text-align:center;color:#666;padding:20px">No tienes cuentas agregadas</div>';
+        return;
+      }
+      div.innerHTML = usuarioActual.cuentas.map((c, i) => `
+        <div class="cuenta-item">
+                    <div class="cuenta-info">
+            <div class="cuenta-banco">${c.banco} - ${c.tipo}</div>
+            <div class="cuenta-numero">${c.numero}</div>
+          </div>
+          <button class="btn-eliminar" onclick="eliminarCuenta(${i})">ELIMINAR</button>
+        </div>
+      `).join('');
+    }
+
+    function mostrarFormCuenta() {
+      document.getElementById('formCuenta').classList.remove('oculto');
+    }
+
+    function cancelarFormCuenta() {
+      document.getElementById('formCuenta').classList.add('oculto');
+      document.getElementById('nuevaCuentaNumero').value = '';
+    }
+
+    function agregarCuenta() {
+      const bancoId = document.getElementById('nuevaCuentaBanco').value;
+      const numero = document.getElementById('nuevaCuentaNumero').value.trim();
+      if (!numero) { mostrarAlerta('Ingresa el número de cuenta', false); return; }
+      const info = BANCOS_INFO[bancoId];
+      const usuarios = DB.getUsuarios();
+      usuarios[usuarioActual.key].cuentas.push({
+        id: bancoId + '_' + Date.now(),
+        banco: info.nombre,
+        tipo: info.tipo,
+        numero: numero
+      });
+      DB.setUsuarios(usuarios);
+      usuarioActual.cuentas = usuarios[usuarioActual.key].cuentas;
+      cargarCuentasSelect();
+      renderCuentas();
+      cancelarFormCuenta();
+      mostrarAlerta('Cuenta agregada', true);
+    }
+
+    function eliminarCuenta(index) {
+      if (!confirm('¿Eliminar esta cuenta?')) return;
+      const usuarios = DB.getUsuarios();
+      usuarios[usuarioActual.key].cuentas.splice(index, 1);
+      DB.setUsuarios(usuarios);
+      usuarioActual.cuentas = usuarios[usuarioActual.key].cuentas;
+      cargarCuentasSelect();
+      renderCuentas();
+      mostrarAlerta('Cuenta eliminada', true);
+    }
+
+    function resetearBancoManual() {
+      if (!usuarioActual || usuarioActual.cuentas.length === 0) return;
+      const opciones = usuarioActual.cuentas.map(c => c.banco).join('\n');
+      const banco = prompt(`¿Qué banco resetear?\n${opciones}`);
+      if (!banco) return;
+      const cuenta = usuarioActual.cuentas.find(c => c.banco.toLowerCase().includes(banco.toLowerCase()));
+      if (!cuenta) return;
+      if (!confirm(`¿Resetear ${cuenta.banco} a 0/50?`)) return;
+      const contadores = DB.getContadores(usuarioActual.key);
+      const hoy = new Date();
+      contadores[cuenta.id] = {
+        mensual: 0,
+        semestral: 0,
+        mes: hoy.getMonth() + '-' + hoy.getFullYear(),
+        semestre: Math.floor(hoy.getMonth()/6) + '-' + hoy.getFullYear()
+      };
+      DB.setContadores(usuarioActual.key, contadores);
+      mostrarAlerta(`${cuenta.banco} reseteado`, true);
+      renderSemaforoCompleto();
+    }
+
+    function exportarCSV() {
+      const historial = DB.getHistorial(usuarioActual.key);
+      let csv = 'Folio,Banco,Monto,Fecha,Referencia\n';
+      historial.forEach(v => {
+        csv += `${v.folio},${v.cuenta.banco},${v.monto},${v.fecha},${v.ref || ''}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `qr-historial-${usuarioActual.key}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // EJECUCIÓN INMEDIATA - NO ESPERA DOMContentLoaded
+    // Esto hace que funcione aunque se abra desde content:// o file://
+    (function() {
+      try {
+        DB.setUsuarios(USUARIOS_DEFAULT);
+        const sesion = DB.getSesion();
+        if (sesion) {
+          cargarUsuario(sesion);
+          document.getElementById('loginScreen').classList.add('oculto');
+          document.getElementById('appContainer').classList.remove('oculto');
+        } else {
+          mostrarLogin();
+        }
+      } catch(e) {
+        console.error('Error iniciando:', e);
+        // Si falla todo, al menos muestra el login con los usuarios hardcodeados
+        const html = Object.keys(USUARIOS_DEFAULT).map(key =>
+          `<button class="usuario-btn" onclick="seleccionarUsuario('${key}')">${USUARIOS_DEFAULT[key].nombre}</button>`
+        ).join('');
+        document.getElementById('listaUsuarios').innerHTML = html;
+      }
+    })();
+  </script>
+</body>
+</html>
