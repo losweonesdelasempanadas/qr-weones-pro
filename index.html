@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QR WEONES PRO</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh}
@@ -48,15 +49,14 @@ select option.cuenta-llena{background:#1a0000;color:#ff3333;font-weight:bold}
 .card-sii.rojo.card-sii-mes{color:#ff3333}
 .card-sii-sem{font-size:11px;color:#666;margin-top:3px}
 
-.lista-cuentas{display:flex;flex-direction:column;gap:10px}
-.cuenta-item{background:#0a0a0a;border:2px solid #333;border-radius:10px;padding:15px;display:flex;justify-content:space-between;align-items:center}
-.cuenta-info{flex:1}
-.cuenta-nombre{color:#ff6600;font-weight:bold;font-size:15px;margin-bottom:3px}
-.cuenta-numero{color:#aaa;font-size:13px}
-.btn-eliminar{background:#ff3333;border:none;color:#fff;padding:8px 16px;border-radius:8px;font-weight:bold;font-size:12px;cursor:pointer}
+.lista-cuentas{display:flex;flex-direction:column;gap:15px}
+.cuenta-item{background:#0a0a0a;border:2px solid #333;border-radius:10px;padding:15px}
+.btn-eliminar{background:#ff3333;border:none;color:#fff;padding:8px 16px;border-radius:8px;font-weight:bold;font-size:12px;cursor:pointer;margin-top:10px;width:100%}
 
 .btn-reset{background:#333;border:none;color:#fff;padding:14px;border-radius:10px;font-weight:bold;font-size:14px;cursor:pointer;width:100%;margin-top:10px}
 .btn-agregar{background:#ff6600;border:none;color:#000;padding:16px;border-radius:12px;font-weight:bold;font-size:16px;cursor:pointer;width:100%;margin-top:15px}
+.btn-guardar{background:#00ff00;border:none;color:#000;padding:14px;border-radius:10px;font-weight:bold;font-size:15px;cursor:pointer;width:100%;margin-top:10px}
+.btn-ver-tarjeta{background:#0099ff;border:none;color:#fff;padding:10px;border-radius:8px;font-weight:bold;font-size:13px;cursor:pointer;width:100%;margin-top:8px}
 
 .alerta{padding:12px;border-radius:8px;margin-bottom:15px;font-size:13px;text-align:center}
 .alerta-ok{background:rgba(0,255,0,.1);border:1px solid #00ff00;color:#00ff00}
@@ -64,35 +64,52 @@ select option.cuenta-llena{background:#1a0000;color:#ff3333;font-weight:bold}
 .alerta-warning{background:rgba(255,204,0,.15);border:2px solid #ffcc00;color:#ffcc00}
 
 .oculto{display:none}
+.form-agregar{background:#0a0a0a;border:2px solid #ff6600;border-radius:12px;padding:15px;margin-bottom:15px}
 
-/* PANTALLA COMPLETA PREMIUM - PROXIMA NOVA AJUSTADA */
+/* TARJETA BANCARIA TEMPLATE - 5 COLORES */
+.tarjeta-preview{width:100%;max-width:400px;margin:10px auto;border-radius:18px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.6);position:relative;overflow:hidden;font-family:'Montserrat',sans-serif}
+.tarjeta-azul{background:linear-gradient(135deg,#1e5aa8,#0d3a7a)}
+.tarjeta-verde{background:linear-gradient(135deg,#00a650,#007a3d)}
+.tarjeta-naranja{background:linear-gradient(135deg,#ff6600,#cc5200)}
+.tarjeta-morada{background:linear-gradient(135deg,#6b21a8,#4c1d95)}
+.tarjeta-roja{background:linear-gradient(135deg,#dc2626,#991b1b)}
+.tarjeta-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:12px}
+.tarjeta-logo{font-size:14px;font-weight:800;color:#fff}
+.tarjeta-tipo{font-size:12px;font-weight:700;color:#fff;text-transform:uppercase}
+.tarjeta-nombre{font-size:16px;font-weight:800;color:#fff;margin:8px 0 4px;text-transform:uppercase;letter-spacing:0.5px}
+.tarjeta-dato{font-size:12px;color:rgba(255,255,255,0.95);margin:3px 0;font-weight:700}
+.tarjeta-numero{font-size:19px;font-weight:800;color:#fff;margin:8px 0;letter-spacing:1px}
+.tarjeta-footer{display:flex;justify-content:space-between;align-items:end;margin-top:14px}
+.tarjeta-qr{width:85px;height:85px;background:#fff;padding:4px;border-radius:8px}
+.tarjeta-marca{font-size:18px;font-weight:800;color:#fff;font-style:italic}
+.tarjeta-contactless{font-size:18px;color:rgba(255,255,255,0.7)}
+.tarjeta-monto{font-size:22px;font-weight:800;color:#fff;margin:8px 0}
+
+/* PANTALLA COMPLETA PREMIUM - ARREGLADA */
 .pantalla-datos{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;z-index:9999;display:flex;flex-direction:column;padding:0;font-family:'Montserrat','Proxima Nova',sans-serif}
 .pantalla-datos.oculto{display:none}
-.pantalla-header{background:#ff6600;padding:20px;text-align:center}
-.pantalla-header h2{color:#000;font-size:24px;margin:0;font-weight:800;font-family:'Montserrat','Proxima Nova',sans-serif}
-.pantalla-header.folio{color:#000;font-size:18px;margin-top:5px;font-weight:700;font-family:'Montserrat','Proxima Nova',sans-serif}
+.pantalla-header{background:#ff6600;padding:14px;text-align:center;flex-shrink:0}
+.pantalla-header h2{color:#000;font-size:20px;margin:0;font-weight:800;letter-spacing:1px}
+.pantalla-header.folio{color:#000;font-size:14px;margin-top:4px;font-weight:700}
 
-.tabs-datos{display:flex;gap:0;background:#1a1a1a}
-.tab-datos{flex:1;padding:16px;background:#0a0a0a;border:none;border-top:3px solid #333;color:#666;font-weight:700;font-size:15px;cursor:pointer;font-family:'Montserrat','Proxima Nova',sans-serif}
-.tab-datos.activo{background:#1a1a1a;color:#ff6600;border-top-color:#ff6600}
+.contenido-datos{flex:1;background:#1a1a1a;padding:15px;overflow-y:auto;display:flex;align-items:center;justify-content:center}
 
-.contenido-datos{flex:1;background:#1a1a1a;padding:20px;overflow-y:auto}
-.datos-fila{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #2a2a2a;gap:15px}
-.datos-fila:last-child{border-bottom:none}
-.datos-label{font-size:15px;color:#999;font-weight:700;font-family:'Montserrat','Proxima Nova',sans-serif;text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0}
-.datos-valor{font-size:17px;color:#fff;font-weight:700;text-align:right;font-family:'Montserrat','Proxima Nova',sans-serif;word-break:break-word;line-height:1.3;max-width:65%}
-.datos-valor.correo{font-size:13px;font-weight:600}
-.datos-valor.monto{font-size:24px;color:#ff6600;font-weight:800}
-
-.pantalla-footer{padding:15px;background:#1a1a1a;border-top:2px solid #333}
-.btn-premium{width:100%;padding:18px;background:linear-gradient(135deg,#00ff00,#00cc00);border:none;border-radius:12px;color:#000;font-weight:800;font-size:18px;cursor:pointer;margin-bottom:10px;font-family:'Montserrat','Proxima Nova',sans-serif}
-.btn-premium-sec{background:#333;color:#fff}
-.btn-copiar{background:#0a0a0a;color:#ff6600;border:2px solid #ff6600;padding:16px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-bottom:10px;font-family:'Montserrat','Proxima Nova',sans-serif}
+.pantalla-footer{padding:12px;background:#1a1a1a;border-top:2px solid #333;flex-shrink:0}
+.footer-botones{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-footer{padding:15px;border:none;border-radius:12px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Montserrat','Proxima Nova',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:70px}
+.btn-footer-copiar{background:#0a0a0a;color:#ff6600;border:2px solid #ff6600}
+.btn-footer-confirmar{background:linear-gradient(135deg,#00ff00,#00cc00);color:#000}
+.btn-footer-volver{background:#333;color:#fff}
+.btn-footer:disabled{opacity:0.3}
 
 .login-screen{padding:20px;max-width:400px;margin:50px auto}
 .login-container{background:#1a1a1a;border:3px solid #ff6600;border-radius:20px;padding:30px}
 .login-logo{width:80px;height:80px;border-radius:50%;background:#ff6600;margin:0 auto 15px;overflow:hidden}
 .login-logo img{width:100%;height:100%;object-fit:cover}
+
+.template-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px}
+.template-option{padding:12px;border:2px solid #333;border-radius:10px;cursor:pointer;text-align:center;font-weight:bold;font-size:11px}
+.template-option.activo{border-color:#ff6600;background:rgba(255,102,0,0.1)}
 </style>
 </head>
 <body>
@@ -149,7 +166,7 @@ select option.cuenta-llena{background:#1a0000;color:#ff3333;font-weight:bold}
     <div class="container">
       <div class="container-titulo">💰 GENERAR COBRO</div>
       <div id="alertaMain"></div>
-      
+
       <div class="form-group">
         <label>BANCO DESTINO</label>
         <select id="banco" onchange="actualizarSemaforo()"></select>
@@ -198,87 +215,98 @@ select option.cuenta-llena{background:#1a0000;color:#ff3333;font-weight:bold}
     </div>
   </div>
 
-  <!-- TAB CUENTAS -->
+  <!-- TAB CUENTAS - CON CRUD FUNCIONANDO -->
   <div id="contenidoCuentas" class="oculto">
     <div class="container">
       <div class="container-titulo">🏦 MIS CUENTAS</div>
+
+      <div id="formAgregarCuenta" class="form-agregar oculto">
+        <div class="form-group">
+          <label>BANCO</label>
+          <select id="nuevoBanco">
+            <option value="">-- Selecciona banco --</option>
+            <option value="Tenpo">Tenpo</option>
+            <option value="Banco Estado">Banco Estado</option>
+            <option value="Mercado Pago">Mercado Pago</option>
+            <option value="BCI">BCI</option>
+            <option value="Banco de Chile">Banco de Chile</option>
+            <option value="Santander">Santander</option>
+            <option value="Banco Falabella">Banco Falabella</option>
+            <option value="Scotiabank">Scotiabank</option>
+            <option value="Banco Ripley">Banco Ripley</option>
+            <option value="Banco Security">Banco Security</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>TIPO DE CUENTA</label>
+          <select id="nuevoTipo">
+            <option value="Cuenta Vista">Cuenta Vista</option>
+            <option value="Cuenta Corriente">Cuenta Corriente</option>
+            <option value="Cuenta de Ahorro">Cuenta de Ahorro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>NÚMERO DE CUENTA</label>
+          <input type="text" id="nuevoNumero" placeholder="111112082344">
+        </div>
+        <div class="form-group">
+          <label>TEMPLATE DE TARJETA</label>
+          <div class="template-selector">
+            <div class="template-option activo" data-template="azul" onclick="seleccionarTemplate('azul')" style="background:linear-gradient(135deg,#1e5aa8,#0d3a7a);color:#fff">AZUL</div>
+            <div class="template-option" data-template="verde" onclick="seleccionarTemplate('verde')" style="background:linear-gradient(135deg,#00a650,#007a3d);color:#fff">VERDE</div>
+            <div class="template-option" data-template="naranja" onclick="seleccionarTemplate('naranja')" style="background:linear-gradient(135deg,#ff6600,#cc5200);color:#fff">NARANJA</div>
+            <div class="template-option" data-template="morada" onclick="seleccionarTemplate('morada')" style="background:linear-gradient(135deg,#6b21a8,#4c1d95);color:#fff">MORADA</div>
+            <div class="template-option" data-template="roja" onclick="seleccionarTemplate('roja')" style="background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff">ROJA</div>
+          </div>
+        </div>
+        <button class="btn-guardar" onclick="guardarCuenta()">✅ GUARDAR CUENTA</button>
+        <button class="btn-reset" onclick="toggleFormCuenta()">❌ CANCELAR</button>
+      </div>
+
       <div id="listaCuentas" class="lista-cuentas"></div>
-      <button class="btn-agregar" onclick="alert('Próximamente')">+ AGREGAR CUENTA</button>
+      <button class="btn-agregar" onclick="toggleFormCuenta()">+ AGREGAR CUENTA</button>
     </div>
   </div>
 </div>
 
-<!-- PANTALLA COMPLETA DATOS -->
+<!-- PANTALLA COMPLETA DATOS - LAYOUT ARREGLADO -->
 <div id="pantallaDatos" class="pantalla-datos oculto">
   <div class="pantalla-header">
     <h2>DATOS TRANSFERENCIA</h2>
     <div class="folio" id="folioGrande"></div>
   </div>
-  
-  <div class="tabs-datos">
-    <button class="tab-datos activo" id="tabDatosView" onclick="cambiarTabDatos('datos')">📋 DATOS</button>
-    <button class="tab-datos" id="tabAccionesView" onclick="cambiarTabDatos('acciones')">⚡ ACCIONES</button>
-  </div>
-  
+
   <div id="contenidoDatosView" class="contenido-datos">
-    <div class="datos-fila">
-      <span class="datos-label">RUT</span>
-      <span class="datos-valor" id="datoRut"></span>
-    </div>
-    <div class="datos-fila">
-      <span class="datos-label">Titular</span>
-      <span class="datos-valor" id="datoTitular"></span>
-    </div>
-    <div class="datos-fila">
-      <span class="datos-label">Banco</span>
-      <span class="datos-valor" id="datoBanco"></span>
-    </div>
-    <div class="datos-fila">
-      <span class="datos-label">Tipo</span>
-      <span class="datos-valor" id="datoTipo"></span>
-    </div>
-    <div class="datos-fila">
-      <span class="datos-label">N° Cuenta</span>
-      <span class="datos-valor" id="datoCuenta"></span>
-    </div>
-    <div class="datos-fila">
-      <span class="datos-label">Monto</span>
-      <span class="datos-valor monto" id="datoMonto"></span>
-    </div>
-    <div class="datos-fila">
-      <span class="datos-label">Ítem</span>
-      <span class="datos-valor" id="datoItem"></span>
-    </div>
-    <div class="datos-fila">
-      <span class="datos-label">Correo</span>
-      <span class="datos-valor correo" id="datoCorreo"></span>
-    </div>
+    <div id="tarjetaTransferencia"></div>
   </div>
-  
-  <div id="contenidoAccionesView" class="contenido-datos oculto">
-    <button class="btn-copiar" onclick="copiarTodosDatos()">📋 COPIAR TODOS LOS DATOS</button>
-    <button class="btn-premium" id="btnConfirmar" onclick="confirmarTransferencia()">✅ TRANSFERENCIA REALIZADA</button>
-    <button class="btn-premium btn-premium-sec" onclick="volverApp()">⬅️ VOLVER A INICIO</button>
-    <button class="btn-premium btn-premium-sec" onclick="volverApp()">❌ CANCELAR</button>
+
+  <div class="pantalla-footer">
+    <div class="footer-botones">
+      <button class="btn-footer btn-footer-copiar" onclick="copiarTodosDatos()">
+        <span>📋</span>
+        <span>COPIAR</span>
+      </button>
+      <button class="btn-footer btn-footer-confirmar" id="btnConfirmar" onclick="confirmarTransferencia()">
+        <span>✅</span>
+        <span>CONFIRMAR</span>
+      </button>
+      <button class="btn-footer btn-footer-volver" onclick="volverApp()">
+        <span>⬅️</span>
+        <span>VOLVER</span>
+      </button>
+    </div>
   </div>
 </div>
 
 <script>
-const USUARIOS = {
+const USUARIOS_BASE = {
   'marcelo': {
     pass: '123',
     nombreCompleto: 'MARCELO PEREZ FUENTES',
     rut: '12.082.344-2',
     correo: 'mperez@emporiodonnino.cl',
     prefijo: 'LWE',
-    key: 'marcelo',
-    cuentas: [
-      { id: 'tenpo', banco: 'Tenpo', tipo: 'Cuenta Vista', numero: '111112082344', nombre: 'Tenpo', limite: 50 },
-      { id: 'bcoestado', banco: 'Banco Estado', tipo: 'Cuenta Vista', numero: '12082344', nombre: 'Banco Estado', limite: 50 },
-      { id: 'mp', banco: 'Mercado Pago', tipo: 'Cuenta Vista', numero: '1043699387', nombre: 'Mercado Pago', limite: 50 },
-      { id: 'bci', banco: 'BCI', tipo: 'Cuenta Corriente', numero: '777912082344', nombre: 'BCI', limite: 50 },
-      { id: 'chile', banco: 'Banco de Chile', tipo: 'Cuenta Vista', numero: '00-034-48261-53', nombre: 'Banco de Chile', limite: 50 }
-    ]
+    key: 'marcelo'
   },
   'nataly': {
     pass: '123',
@@ -286,11 +314,7 @@ const USUARIOS = {
     rut: '17.737.531-0',
     correo: 'mperez@emporiodonnino.cl',
     prefijo: 'LWE',
-    key: 'nataly',
-    cuentas: [
-      { id: 'bcoestado', banco: 'Banco Estado', tipo: 'Cuenta Vista', numero: '17737531', nombre: 'Banco Estado', limite: 50 },
-      { id: 'tenpo', banco: 'Tenpo', tipo: 'Cuenta Vista', numero: '111117737531', nombre: 'Tenpo', limite: 50 }
-    ]
+    key: 'nataly'
   },
   'krishna': {
     pass: '123',
@@ -298,11 +322,7 @@ const USUARIOS = {
     rut: '17.901.095-5',
     correo: 'mperez@emporiodonnino.cl',
     prefijo: 'LWE',
-    key: 'krishna',
-    cuentas: [
-      { id: 'bcoestado', banco: 'Banco Estado', tipo: 'Cuenta Vista', numero: '17901095', nombre: 'Banco Estado', limite: 50 },
-      { id: 'tenpo', banco: 'Tenpo', tipo: 'Cuenta Vista', numero: '111117901095', nombre: 'Tenpo', limite: 50 }
-    ]
+    key: 'krishna'
   }
 };
 
@@ -316,12 +336,55 @@ const DB = {
     const l = DB.getVentas(k);
     l.unshift(v);
     DB.set(`ventas_${k}`, l.slice(0, 200));
+  },
+  getCuentas: (k) => DB.get(`cuentas_${k}`, []),
+  setCuentas: (k, v) => DB.set(`cuentas_${k}`, v),
+  addCuenta: (k, cuenta) => {
+    const cuentas = DB.getCuentas(k);
+    cuenta.id = Date.now().toString();
+    cuenta.limite = 50;
+    cuentas.push(cuenta);
+    DB.setCuentas(k, cuentas);
+  },
+  deleteCuenta: (k, id) => {
+    const cuentas = DB.getCuentas(k).filter(c => c.id!== id);
+    DB.setCuentas(k, cuentas);
   }
 };
 
 let usuarioActual = null;
 let ventaPendiente = null;
 let esPrueba = false;
+let templateSeleccionado = 'azul';
+
+// CORREGIDO: Fuerza las 5 cuentas de Marcelo si no existen
+function initCuentasDefault() {
+  Object.keys(USUARIOS_BASE).forEach(key => {
+    const cuentas = DB.getCuentas(key);
+    if (cuentas.length === 0) {
+      const defaults = {
+        'marcelo': [
+          { id: 'tenpo', banco: 'Tenpo', tipo: 'Cuenta Vista', numero: '111112082344', nombre: 'Tenpo', limite: 50, template: 'azul' },
+          { id: 'bcoestado', banco: 'Banco Estado', tipo: 'Cuenta Vista', numero: '12082344', nombre: 'Banco Estado', limite: 50, template: 'naranja' },
+          { id: 'mp', banco: 'Mercado Pago', tipo: 'Cuenta Vista', numero: '1043699387', nombre: 'Mercado Pago', limite: 50, template: 'azul' },
+          { id: 'bci', banco: 'BCI', tipo: 'Cuenta Corriente', numero: '777912082344', nombre: 'BCI', limite: 50, template: 'verde' },
+          { id: 'chile', banco: 'Banco de Chile', tipo: 'Cuenta Vista', numero: '00-034-48261-53', nombre: 'Banco de Chile', limite: 50, template: 'morada' }
+        ],
+        'nataly': [
+          { id: 'bcoestado', banco: 'Banco Estado', tipo: 'Cuenta Vista', numero: '17737531', nombre: 'Banco Estado', limite: 50, template: 'naranja' },
+          { id: 'tenpo', banco: 'Tenpo', tipo: 'Cuenta Vista', numero: '111117737531', nombre: 'Tenpo', limite: 50, template: 'azul' }
+        ],
+        'krishna': [
+          { id: 'bcoestado', banco: 'Banco Estado', tipo: 'Cuenta Vista', numero: '17901095', nombre: 'Banco Estado', limite: 50, template: 'naranja' },
+          { id: 'tenpo', banco: 'Tenpo', tipo: 'Cuenta Vista', numero: '111117901095', nombre: 'Tenpo', limite: 50, template: 'azul' }
+        ]
+      };
+      if (defaults[key]) DB.setCuentas(key, defaults[key]);
+    }
+  });
+}
+
+initCuentasDefault();
 
 function mostrarAlerta(msg, tipo = 'ok', cont = 'alertaMain') {
   const el = document.getElementById(cont);
@@ -334,11 +397,11 @@ function login() {
   const u = document.getElementById('usuario').value.toLowerCase().trim();
   const p = document.getElementById('password').value;
   if (!u) { mostrarAlerta('⚠️ Selecciona un usuario', 'error', 'alertaLogin'); return; }
-  if (!USUARIOS[u] || USUARIOS[u].pass!== p) {
+  if (!USUARIOS_BASE[u] || USUARIOS_BASE[u].pass!== p) {
     mostrarAlerta('❌ Usuario o contraseña incorrectos', 'error', 'alertaLogin');
     return;
   }
-  usuarioActual = USUARIOS[u];
+  usuarioActual = {...USUARIOS_BASE[u], cuentas: DB.getCuentas(u)};
   document.getElementById('loginScreen').classList.add('oculto');
   document.getElementById('mainScreen').classList.remove('oculto');
   document.getElementById('usuarioHeader').textContent = `Usuario: ${usuarioActual.nombreCompleto.split(' ')[0]}`;
@@ -358,16 +421,17 @@ function logout() {
 }
 
 function cargarBancos() {
+  usuarioActual.cuentas = DB.getCuentas(usuarioActual.key);
   const sel = document.getElementById('banco');
   sel.innerHTML = '';
+  if (usuarioActual.cuentas.length === 0) {
+    sel.innerHTML = '<option value="">-- Sin cuentas --</option>';
+    return;
+  }
   usuarioActual.cuentas.forEach(c => {
     const cont = getContadorBanco(c.id);
     let clase = 'cuenta-buena';
-    
-    if (cont.mensual >= c.limite) {
-      clase = 'cuenta-llena';
-    }
-    
+    if (cont.mensual >= c.limite) clase = 'cuenta-llena';
     sel.innerHTML += `<option value="${c.id}" class="${clase}">${c.nombre} - ${c.tipo}</option>`;
   });
 }
@@ -385,7 +449,11 @@ function getContadorBanco(bancoId) {
 
 function actualizarSemaforo() {
   const bancoId = document.getElementById('banco').value;
-  if (!bancoId) return;
+  if (!bancoId) {
+    document.getElementById('semaforoNombre').textContent = 'SIN CUENTAS';
+    document.getElementById('semaforoCont').textContent = 'Agrega una cuenta primero';
+    return;
+  }
   const c = getContadorBanco(bancoId);
   const cuenta = usuarioActual.cuentas.find(cta => cta.id === bancoId);
   document.getElementById('semaforoNombre').textContent = cuenta.nombre.toUpperCase();
@@ -394,18 +462,113 @@ function actualizarSemaforo() {
   box.style.borderColor = c.mensual >= cuenta.limite - 5? '#ff3333' : c.mensual >= cuenta.limite - 15? '#ffcc00' : '#00ff00';
 }
 
+function toggleFormCuenta() {
+  document.getElementById('formAgregarCuenta').classList.toggle('oculto');
+}
+
+function seleccionarTemplate(t) {
+  templateSeleccionado = t;
+  document.querySelectorAll('.template-option').forEach(el => el.classList.remove('activo'));
+  document.querySelector(`[data-template="${t}"]`).classList.add('activo');
+}
+
+function guardarCuenta() {
+  const banco = document.getElementById('nuevoBanco').value;
+  const tipo = document.getElementById('nuevoTipo').value;
+  const numero = document.getElementById('nuevoNumero').value.trim();
+
+  if (!banco) { mostrarAlerta('⚠️ Selecciona un banco', 'error'); return; }
+  if (!numero) { mostrarAlerta('⚠️ Ingresa el número de cuenta', 'error'); return; }
+
+  DB.addCuenta(usuarioActual.key, { banco, tipo, numero, nombre: banco, template: templateSeleccionado });
+  mostrarAlerta('✅ Cuenta agregada', 'ok');
+
+  document.getElementById('nuevoBanco').value = '';
+  document.getElementById('nuevoNumero').value = '';
+  toggleFormCuenta();
+  cargarBancos();
+  cargarCuentas();
+  cargarSii();
+  actualizarSemaforo();
+}
+
+function eliminarCuenta(id) {
+  if (confirm('¿Eliminar esta cuenta?')) {
+    DB.deleteCuenta(usuarioActual.key, id);
+    mostrarAlerta('✅ Cuenta eliminada', 'ok');
+    cargarBancos();
+    cargarCuentas();
+    cargarSii();
+    actualizarSemaforo();
+  }
+}
+
+function generarTarjetaHTML(cuenta, incluirMonto = false, monto = 0) {
+  const template = cuenta.template || 'azul';
+  return `
+    <div class="tarjeta-preview tarjeta-${template}">
+      <div class="tarjeta-header">
+        <div class="tarjeta-logo">${cuenta.banco.toUpperCase()}</div>
+        <div class="tarjeta-tipo">${cuenta.tipo}</div>
+      </div>
+      <div class="tarjeta-nombre">${usuarioActual.nombreCompleto}</div>
+      <div class="tarjeta-dato">RUT: ${usuarioActual.rut}</div>
+      <div class="tarjeta-dato">Banco: ${cuenta.banco}</div>
+      <div class="tarjeta-dato">Tipo de Cuenta: ${cuenta.tipo}</div>
+      <div class="tarjeta-numero">${cuenta.numero}</div>
+      ${incluirMonto? `<div class="tarjeta-monto">$${monto.toLocaleString('es-CL')}</div>` : ''}
+      <div class="tarjeta-dato">Correo: ${usuarioActual.correo}</div>
+      <div class="tarjeta-footer">
+        <div class="tarjeta-contactless">📶</div>
+        <div class="tarjeta-qr" id="qr-tarjeta-${cuenta.id}"></div>
+        <div class="tarjeta-marca">VISA<br><span style="font-size:12px;font-weight:600">Débito</span></div>
+      </div>
+    </div>
+  `;
+}
+
+function cargarCuentas() {
+  const lista = document.getElementById('listaCuentas');
+  lista.innerHTML = '';
+  if (usuarioActual.cuentas.length === 0) {
+    lista.innerHTML = '<div style="text-align:center;color:#666;padding:20px">No tienes cuentas agregadas</div>';
+    return;
+  }
+  usuarioActual.cuentas.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'cuenta-item';
+    div.innerHTML = generarTarjetaHTML(c) + `
+      <button class="btn-ver-tarjeta" onclick="descargarTarjeta('${c.id}')">💾 DESCARGAR TARJETA</button>
+      <button class="btn-eliminar" onclick="eliminarCuenta('${c.id}')">ELIMINAR CUENTA</button>
+    `;
+    lista.appendChild(div);
+
+    setTimeout(() => {
+      const qrData = `RUT:${usuarioActual.rut}|Titular:${usuarioActual.nombreCompleto}|Banco:${c.banco}|Tipo:${c.tipo}|Cuenta:${c.numero}|Correo:${usuarioActual.correo}`;
+      const qrDiv = document.getElementById(`qr-tarjeta-${c.id}`);
+      if (qrDiv && qrDiv.innerHTML === '') {
+        new QRCode(qrDiv, {
+          text: qrData,
+          width: 77,
+          height: 77,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+      }
+    }, 100);
+  });
+}
+
+function descargarTarjeta(id) {
+  alert('📸 Pa descargar la tarjeta usá captura de pantalla por ahora perrin. Próxima versión te la genero como imagen.');
+}
+
 function cambiarTabMain(tab) {
   ['cobrar','sii','historial','cuentas'].forEach(t => {
     document.getElementById(`tab${t.charAt(0).toUpperCase()+t.slice(1)}`).classList.toggle('activo', t === tab);
     document.getElementById(`contenido${t.charAt(0).toUpperCase()+t.slice(1)}`).classList.toggle('oculto', t!== tab);
   });
-}
-
-function cambiarTabDatos(tab) {
-  document.getElementById('tabDatosView').classList.toggle('activo', tab === 'datos');
-  document.getElementById('tabAccionesView').classList.toggle('activo', tab === 'acciones');
-  document.getElementById('contenidoDatosView').classList.toggle('oculto', tab!== 'datos');
-  document.getElementById('contenidoAccionesView').classList.toggle('oculto', tab!== 'acciones');
 }
 
 function generarDatos(prueba) {
@@ -420,30 +583,40 @@ function generarDatos(prueba) {
   esPrueba = prueba;
   const cont = getContadorBanco(bancoId);
   const cuenta = usuarioActual.cuentas.find(c => c.id === bancoId);
-  
-  if (!prueba && cont.mensual >= cuenta.limite) { 
-    mostrarAlerta(`⛔ BLOQUEADO. ${cuenta.nombre} llegó a ${cuenta.limite}/${cuenta.limite}`, 'error'); 
-    cargarBancos(); 
-    return; 
+
+  if (!prueba && cont.mensual >= cuenta.limite) {
+    mostrarAlerta(`⛔ BLOQUEADO. ${cuenta.nombre} llegó a ${cuenta.limite}/${cuenta.limite}`, 'error');
+    cargarBancos();
+    return;
   }
 
   const folio = prueba? 'PRUEBA' : `${usuarioActual.prefijo}-${String(DB.getFolio(usuarioActual.key) + 1).padStart(3, '0')}`;
-  const emoji = ref === 'Empanada'? '🥟' : ref === 'Lata'? '🥫' : '🍽️';
-  
-  ventaPendiente = { bancoId, cuenta, monto, item: ref, folio, fecha: new Date().toISOString(), prueba };
+
+    ventaPendiente = { bancoId, cuenta, monto, item: ref, folio, fecha: new Date().toISOString(), prueba };
 
   document.getElementById('folioGrande').textContent = folio;
-  document.getElementById('datoRut').textContent = usuarioActual.rut;
-  document.getElementById('datoTitular').textContent = usuarioActual.nombreCompleto;
-  document.getElementById('datoBanco').textContent = cuenta.banco;
-  document.getElementById('datoTipo').textContent = cuenta.tipo;
-  document.getElementById('datoCuenta').textContent = cuenta.numero;
-  document.getElementById('datoMonto').textContent = `$${monto.toLocaleString('es-CL')}`;
-  document.getElementById('datoItem').textContent = ref + ' ' + emoji;
-  document.getElementById('datoCorreo').textContent = usuarioActual.correo;
 
-  document.getElementById('btnConfirmar').style.display = prueba? 'none' : 'block';
-  cambiarTabDatos('datos');
+  // Generar tarjeta completa con monto
+  const tarjetaDiv = document.getElementById('tarjetaTransferencia');
+  tarjetaDiv.innerHTML = generarTarjetaHTML(cuenta, true, monto);
+
+  // Generar QR en la tarjeta
+  setTimeout(() => {
+    const qrData = `RUT:${usuarioActual.rut}|Titular:${usuarioActual.nombreCompleto}|Banco:${cuenta.banco}|Tipo:${cuenta.tipo}|Cuenta:${cuenta.numero}|Monto:${monto}|Item:${ref}|Correo:${usuarioActual.correo}`;
+    const qrDiv = document.querySelector(`#qr-tarjeta-${cuenta.id}`);
+    if (qrDiv && qrDiv.innerHTML === '') {
+      new QRCode(qrDiv, {
+        text: qrData,
+        width: 77,
+        height: 77,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+  }, 100);
+
+  document.getElementById('btnConfirmar').style.display = prueba? 'none' : 'flex';
   document.getElementById('pantallaDatos').classList.remove('oculto');
 }
 
@@ -459,7 +632,7 @@ Monto: $${ventaPendiente.monto.toLocaleString('es-CL')}
 Ítem: ${ventaPendiente.item}
 Correo: ${usuarioActual.correo}
 Ref: ${ventaPendiente.folio}`;
-  
+
   navigator.clipboard.writeText(texto).then(() => {
     alert('✅ Datos copiados');
   });
@@ -467,15 +640,15 @@ Ref: ${ventaPendiente.folio}`;
 
 function confirmarTransferencia() {
   if (!ventaPendiente || esPrueba) return;
-  
+
   DB.addVenta(usuarioActual.key, ventaPendiente);
   DB.setFolio(usuarioActual.key, DB.getFolio(usuarioActual.key) + 1);
-  
+
   const nuevoCont = getContadorBanco(ventaPendiente.bancoId).mensual;
   const limite = ventaPendiente.cuenta.limite;
-  
+
   alert(`✅ Transferencia registrada\n${ventaPendiente.cuenta.nombre}: ${nuevoCont}/${limite}`);
-  
+
   volverApp();
   cargarBancos();
   actualizarSemaforo();
@@ -492,33 +665,21 @@ function volverApp() {
 function cargarSii() {
   const grid = document.getElementById('gridSii');
   grid.innerHTML = '';
+  if (usuarioActual.cuentas.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#666;padding:20px">Sin cuentas agregadas</div>';
+    return;
+  }
   usuarioActual.cuentas.forEach(c => {
     const cont = getContadorBanco(c.id);
     let clase = 'card-sii';
     if (cont.mensual >= c.limite - 5) clase += ' rojo';
     else if (cont.mensual >= c.limite - 15) clase += ' amarillo';
-    
+
     grid.innerHTML += `
       <div class="${clase}">
         <div class="card-sii-nombre">${c.nombre}</div>
         <div class="card-sii-mes">${cont.mensual}/${c.limite}</div>
         <div class="card-sii-sem">${cont.semestral}/100 sem</div>
-      </div>
-    `;
-  });
-}
-
-function cargarCuentas() {
-  const lista = document.getElementById('listaCuentas');
-  lista.innerHTML = '';
-  usuarioActual.cuentas.forEach(c => {
-    lista.innerHTML += `
-      <div class="cuenta-item">
-        <div class="cuenta-info">
-          <div class="cuenta-nombre">${c.nombre} - ${c.tipo}</div>
-          <div class="cuenta-numero">${c.numero}</div>
-        </div>
-        <button class="btn-eliminar" onclick="alert('Función eliminar próximamente')">ELIMINAR</button>
       </div>
     `;
   });
