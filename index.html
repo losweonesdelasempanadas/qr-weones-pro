@@ -3,70 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LWE - QR + Manual Banco</title>
+<title>QR WEONES PRO</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-body.modo-prueba .container{border:2px solid #00ccff;box-shadow:0 0 30px rgba(0,204,255,.3)}
-.container{width:100%;max-width:480px;background:linear-gradient(135deg,#1a1a1a,#2d2d2d);border-radius:20px;padding:30px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
-h1{font-size:24px;margin-bottom:10px;color:#00ff00;text-align:center}
-.subtitle{font-size:12px;color:#888;text-align:center;margin-bottom:25px}
-.login-screen{display:block}
-.main-screen{display:none}
-.form-group{margin-bottom:20px}
-label{display:block;margin-bottom:8px;font-size:13px;color:#aaa}
-input,select{width:100%;padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;font-size:14px}
-input:focus,select:focus{outline:none;border-color:#00ff00}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh}
+.header{border:3px solid #ff6600;border-radius:15px;padding:15px;margin:15px;display:flex;align-items:center;justify-content:space-between;background:#1a1a1a}
+.header-left{display:flex;align-items:center;gap:12px}
+.logo{width:50px;height:50px;border-radius:50%;background:#ff6600;display:flex;align-items:center;justify-content:center;font-size:28px}
+.header-info h2{color:#ff6600;font-size:18px;margin:0}
+.header-info p{color:#aaa;font-size:13px;margin:0}
+.btn-salir{background:#333;border:none;color:#fff;padding:10px 20px;border-radius:8px;font-weight:bold;cursor:pointer}
+
+.tabs-main{display:flex;gap:8px;margin:0 15px 15px}
+.tab-main{flex:1;padding:14px;background:#1a1a1a;border:2px solid #333;border-radius:10px;color:#666;font-weight:bold;font-size:14px;cursor:pointer;transition:.2s}
+.tab-main.activo{background:#ff6600;border-color:#ff6600;color:#000}
+
+.container{margin:0 15px 15px;background:#1a1a1a;border:2px solid #333;border-radius:15px;padding:20px}
+.container-titulo{color:#ff6600;font-size:16px;font-weight:bold;margin-bottom:15px;display:flex;align-items:center;gap:8px}
+.form-group{margin-bottom:15px}
+label{display:block;margin-bottom:6px;font-size:13px;color:#ff6600;font-weight:bold;text-transform:uppercase}
+input,select{width:100%;padding:14px;background:#0a0a0a;border:2px solid #333;border-radius:10px;color:#fff;font-size:16px}
+input:focus,select:focus{outline:none;border-color:#ff6600}
 select option.cuenta-buena{background:#0a1a0a;color:#00ff00}
-select option.cuenta-mala{background:#1a1a00;color:#ffcc00;font-weight:bold}
-select option.cuenta-llena{background:#1a0000;color:#ff3333}
-.btn{width:100%;padding:14px;background:linear-gradient(135deg,#00ff00,#00cc00);border:none;border-radius:10px;color:#000;font-weight:bold;font-size:15px;cursor:pointer;margin-bottom:10px;transition:.3s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 5px 20px rgba(0,255,0,.3)}
-.btn-sec{background:#333;color:#fff}
-.btn-danger{background:linear-gradient(135deg,#ff3333,#cc0000);color:#fff}
-.btn-prueba{background:linear-gradient(135deg,#00ccff,#0099cc);color:#000}
-.btn-tab{flex:1;padding:12px;background:#222;border:1px solid #333;border-radius:8px 8px 0 0;color:#888;font-weight:bold;cursor:pointer}
-.btn-tab.activo{background:#1a1a1a;color:#00ff00;border-bottom:2px solid #00ff00}
-.semaforo{display:flex;gap:10px;margin:20px 0;padding:15px;background:#1a1a1a;border-radius:10px}
-.semaforo-item{flex:1;text-align:center}
-.semaforo-valor{font-size:28px;font-weight:bold;margin-bottom:5px}
-.semaforo-label{font-size:11px;color:#888}
-.verde{color:#00ff00}.amarillo{color:#ffcc00}.rojo{color:#ff3333}
-.tabs{display:flex;gap:5px;margin-bottom:0}
-.tab-content{background:#1a1a1a;padding:20px;border-radius:0 10px 10px 10px;margin-bottom:20px}
-.qr-container{background:#fff;padding:20px;border-radius:15px;text-align:center}
-.qr-container img{width:100%;max-width:300px;margin:0 auto;display:block}
-.datos-qr{background:#1a1a1a;padding:15px;border-radius:10px;margin-top:15px;font-size:13px;line-height:1.8;text-align:left}
-.datos-qr b{color:#00ff00}
-.datos-manual{background:#0a0a0a;padding:20px;border-radius:10px;border:2px solid #00ff00}
-.datos-manual .fila{display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid #333;font-size:14px}
-.datos-manual .fila:last-child{border-bottom:none}
-.datos-manual .label{color:#888}
-.datos-manual .valor{color:#00ff00;font-weight:bold;text-align:right;font-family:monospace}
-.btn-copiar{background:#00ff00;color:#000;border:none;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:bold;cursor:pointer;margin-top:10px;width:100%}
-.btn-copiar:active{transform:scale(0.95)}
-.folio-badge{background:#00ff00;color:#000;padding:8px 15px;border-radius:20px;display:inline-block;font-weight:bold;margin-bottom:15px}
-.modo-prueba-badge{background:#00ccff;color:#000;padding:8px 15px;border-radius:20px;display:inline-block;font-weight:bold;margin-bottom:15px;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.8}}
+select option.cuenta-llena{background:#1a0000;color:#ff3333;font-weight:bold}
+
+.semaforo-banco{background:#0a0a0a;border:3px solid #00ff00;border-radius:12px;padding:15px;text-align:center;margin-bottom:15px}
+.semaforo-banco-nombre{font-size:20px;font-weight:bold;color:#00ff00;margin-bottom:5px}
+.semaforo-banco-cont{font-size:16px;color:#aaa}
+
+.btn{width:100%;padding:16px;border:none;border-radius:12px;font-weight:bold;font-size:16px;cursor:pointer;margin-bottom:10px;transition:.2s}
+.btn-generar{background:linear-gradient(135deg,#00ff00,#00cc00);color:#000}
+.btn-prueba{background:linear-gradient(135deg,#0099ff,#0066cc);color:#fff}
+.btn:active{transform:scale(0.97)}
+
+.grid-sii{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
+.card-sii{background:#0a0a0a;border:3px solid #00ff00;border-radius:12px;padding:15px;text-align:center}
+.card-sii.amarillo{border-color:#ffcc00}
+.card-sii.rojo{border-color:#ff3333}
+.card-sii-nombre{font-size:15px;color:#fff;margin-bottom:5px}
+.card-sii-mes{font-size:20px;font-weight:bold;color:#00ff00}
+.card-sii.amarillo.card-sii-mes{color:#ffcc00}
+.card-sii.rojo.card-sii-mes{color:#ff3333}
+.card-sii-sem{font-size:11px;color:#666;margin-top:3px}
+
+.lista-cuentas{display:flex;flex-direction:column;gap:10px}
+.cuenta-item{background:#0a0a0a;border:2px solid #333;border-radius:10px;padding:15px;display:flex;justify-content:space-between;align-items:center}
+.cuenta-info{flex:1}
+.cuenta-nombre{color:#ff6600;font-weight:bold;font-size:15px;margin-bottom:3px}
+.cuenta-numero{color:#aaa;font-size:13px}
+.btn-eliminar{background:#ff3333;border:none;color:#fff;padding:8px 16px;border-radius:8px;font-weight:bold;font-size:12px;cursor:pointer}
+
+.btn-reset{background:#333;border:none;color:#fff;padding:14px;border-radius:10px;font-weight:bold;font-size:14px;cursor:pointer;width:100%;margin-top:10px}
+.btn-agregar{background:#ff6600;border:none;color:#000;padding:16px;border-radius:12px;font-weight:bold;font-size:16px;cursor:pointer;width:100%;margin-top:15px}
+
 .alerta{padding:12px;border-radius:8px;margin-bottom:15px;font-size:13px;text-align:center}
 .alerta-ok{background:rgba(0,255,0,.1);border:1px solid #00ff00;color:#00ff00}
 .alerta-error{background:rgba(255,51,51,.1);border:1px solid #ff3333;color:#ff3333}
-.alerta-info{background:rgba(0,204,255,.1);border:1px solid #00ccff;color:#00ccff}
 .alerta-warning{background:rgba(255,204,0,.15);border:2px solid #ffcc00;color:#ffcc00}
+
 .oculto{display:none}
-.usuario-info{background:#1a1a1a;padding:12px;border-radius:8px;margin-bottom:20px;font-size:13px;text-align:center;line-height:1.6}
-.usuario-info b{color:#00ff00}
-.monto-display{font-size:36px;font-weight:bold;color:#00ff00;text-align:center;margin:15px 0}
-.leyenda-cuentas{background:#1a1a1a;padding:15px;border-radius:8px;margin-bottom:15px;font-size:11px;line-height:1.8;border:2px solid #333}
-.leyenda-item{margin:5px 0;padding:5px;border-radius:4px}
-.leyenda-verde{background:rgba(0,255,0,.05)}
+
+/* PANTALLA COMPLETA PREMIUM */
+.pantalla-datos{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;z-index:9999;display:flex;flex-direction:column;padding:0}
+.pantalla-datos.oculto{display:none}
+.pantalla-header{background:#ff6600;padding:20px;text-align:center}
+.pantalla-header h2{color:#000;font-size:24px;margin:0}
+.pantalla-header.folio{color:#000;font-size:18px;margin-top:5px;font-weight:bold}
+
+.tabs-datos{display:flex;gap:0;background:#1a1a1a}
+.tab-datos{flex:1;padding:16px;background:#0a0a0a;border:none;border-top:3px solid #333;color:#666;font-weight:bold;font-size:15px;cursor:pointer}
+.tab-datos.activo{background:#1a1a1a;color:#ff6600;border-top-color:#ff6600}
+
+.contenido-datos{flex:1;background:#1a1a1a;padding:20px;overflow-y:auto}
+.datos-fila{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #2a2a2a}
+.datos-fila:last-child{border-bottom:none}
+.datos-label{font-size:16px;color:#999;font-weight:bold}
+.datos-valor{font-size:18px;color:#fff;font-weight:bold;text-align:right;font-family:'Courier New',monospace;word-break:break-all}
+.datos-valor.correo{font-size:14px}
+.datos-valor.monto{font-size:24px;color:#ff6600}
+
+.pantalla-footer{padding:15px;background:#1a1a1a;border-top:2px solid #333}
+.btn-premium{width:100%;padding:18px;background:linear-gradient(135deg,#00ff00,#00cc00);border:none;border-radius:12px;color:#000;font-weight:bold;font-size:18px;cursor:pointer;margin-bottom:10px}
+.btn-premium-sec{background:#333;color:#fff}
+.btn-copiar{background:#0a0a0a;color:#ff6600;border:2px solid #ff6600;padding:16px;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;width:100%;margin-bottom:10px}
+
+.login-screen{padding:20px;max-width:400px;margin:50px auto}
+.login-container{background:#1a1a1a;border:3px solid #ff6600;border-radius:20px;padding:30px}
 </style>
 </head>
 <body>
-<div class="container">
-  <div id="loginScreen" class="login-screen">
-    <h1>🥟 LWE VENTAS</h1>
-    <p class="subtitle">QR Técnico + Datos Banco</p>
+
+<div id="loginScreen" class="login-screen">
+  <div class="login-container">
+    <div style="text-align:center;margin-bottom:25px">
+      <div style="font-size:50px;margin-bottom:10px">🥟</div>
+      <h1 style="color:#ff6600;font-size:26px">QR WEONES PRO</h1>
+    </div>
     <div id="alertaLogin"></div>
     <div class="form-group">
       <label>Usuario</label>
@@ -81,160 +113,187 @@ select option.cuenta-llena{background:#1a0000;color:#ff3333}
       <label>Contraseña</label>
       <input type="password" id="password" placeholder="••••">
     </div>
-    <button class="btn" onclick="login()">ENTRAR</button>
+    <button class="btn btn-generar" onclick="login()">ENTRAR</button>
+  </div>
+</div>
+
+<div id="mainScreen" class="oculto">
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">🥟</div>
+      <div class="header-info">
+        <h2>QR WEONES PRO</h2>
+        <p id="usuarioHeader">Usuario: Marcelo</p>
+      </div>
+    </div>
+    <button class="btn-salir" onclick="logout()">SALIR</button>
   </div>
 
-  <div id="mainScreen" class="main-screen">
-    <h1>🥟 LWE VENTAS</h1>
-    <p class="subtitle">Límites: 45/50 todas las cuentas</p>
-    
-    <div class="usuario-info" id="usuarioInfo"></div>
-    
-    <div class="leyenda-cuentas">
-      <div class="leyenda-item leyenda-verde">
-        <b style="color:#00ff00">🟢 TODAS LAS CUENTAS - Límite 45/50</b><br>
-        QR: Sin guiones | Manual: Como manda el banco
-      </div>
-    </div>
-    
-    <div class="semaforo">
-      <div class="semaforo-item">
-        <div class="semaforo-valor verde" id="semMensual">0/45</div>
-        <div class="semaforo-label">MENSUAL</div>
-      </div>
-      <div class="semaforo-item">
-        <div class="semaforo-valor verde" id="semSemestral">0/100</div>
-        <div class="semaforo-label">SEMESTRAL</div>
-      </div>
-    </div>
+  <div class="tabs-main">
+    <button class="tab-main activo" id="tabCobrar" onclick="cambiarTabMain('cobrar')">COBRAR</button>
+    <button class="tab-main" id="tabSii" onclick="cambiarTabMain('sii')">SII</button>
+    <button class="tab-main" id="tabHistorial" onclick="cambiarTabMain('historial')">HISTORIAL</button>
+    <button class="tab-main" id="tabCuentas" onclick="cambiarTabMain('cuentas')">CUENTAS</button>
+  </div>
 
-    <div id="alertaMain"></div>
-
-    <div class="form-group">
-      <label>Cuenta Destino</label>
-      <select id="banco" onchange="actualizarSemaforo()"></select>
-    </div>
-
-    <div class="form-group">
-      <label>Monto ($)</label>
-      <input type="number" id="monto" placeholder="2000" min="100" step="100">
-    </div>
-
-    <div class="form-group">
-      <label>Referencia (opcional)</label>
-      <input type="text" id="referencia" placeholder="2 empanadas queso">
-    </div>
-
-    <button class="btn btn-prueba" onclick="generarQR(true)">🧪 QR PRUEBA</button>
-    <button class="btn" onclick="generarQR(false)">💰 GENERAR PAGO</button>
-    <button class="btn btn-sec btn-danger oculto" id="btnSalirPrueba" onclick="salirModoPrueba()">⬅️ SALIR MODO PRUEBA</button>
-    <button class="btn btn-sec" onclick="verHistorial()">📊 HISTORIAL</button>
-    <button class="btn btn-sec" onclick="logout()">🚪 SALIR</button>
-
-    <div id="qrContainer" class="oculto">
-      <div id="badgeContainer"></div>
-      <div class="monto-display" id="montoDisplay"></div>
+  <!-- TAB COBRAR -->
+  <div id="contenidoCobrar">
+    <div class="container">
+      <div class="container-titulo">💰 GENERAR COBRO</div>
+      <div id="alertaMain"></div>
       
-      <div class="tabs">
-        <button class="btn-tab activo" id="tabQR" onclick="cambiarTab('qr')">📱 QR</button>
-        <button class="btn-tab" id="tabManual" onclick="cambiarTab('manual')">📝 DATOS BANCO</button>
+      <div class="form-group">
+        <label>BANCO DESTINO</label>
+        <select id="banco" onchange="actualizarSemaforo()"></select>
       </div>
-      
-      <div id="contenidoQR" class="tab-content">
-        <div class="qr-container">
-          <img id="qrImagen" src="" alt="QR">
-          <div class="datos-qr" id="datosQR"></div>
-        </div>
-      </div>
-      
-      <div id="contenidoManual" class="tab-content oculto">
-        <div class="datos-manual" id="datosManual"></div>
-        <button class="btn-copiar" onclick="copiarDatos()">📋 COPIAR DATOS</button>
-      </div>
-      
-      <button class="btn" id="btnConfirmar" onclick="confirmarVenta()">✅ CONFIRMAR PAGO RECIBIDO</button>
-      <button class="btn btn-sec" id="btnCancelar" onclick="cancelarQR()">❌ CANCELAR</button>
-    </div>
 
-    <div id="historialContainer" class="oculto">
-      <h3 style="margin:20px 0 10px">📊 Historial</h3>
-      <div id="listaHistorial" style="background:#1a1a1a;padding:15px;border-radius:10px;max-height:400px;overflow-y:auto"></div>
-      <button class="btn btn-sec" onclick="cerrarHistorial()">⬅️ VOLVER</button>
+      <div class="form-group">
+        <label>MONTO A COBRAR</label>
+        <input type="number" id="monto" placeholder="7500" min="100" step="100">
+      </div>
+
+      <div class="form-group">
+        <label>REFERENCIA</label>
+        <select id="referencia">
+          <option value="">-- Selecciona --</option>
+          <option value="Empanada">🥟 Empanada</option>
+          <option value="Lata">🥫 Lata</option>
+          <option value="Combo">🍽️ Combo</option>
+        </select>
+      </div>
+
+      <div class="semaforo-banco" id="semaforoBanco">
+        <div class="semaforo-banco-nombre" id="semaforoNombre">TENPO</div>
+        <div class="semaforo-banco-cont" id="semaforoCont">0/50 mes | 0/100 sem</div>
+      </div>
+
+      <button class="btn btn-generar" onclick="generarDatos(false)">💰 GENERAR + REGISTRAR</button>
+      <button class="btn btn-prueba" onclick="generarDatos(true)">🧪 QR PRUEBA - LIQUIDACIÓN</button>
     </div>
+  </div>
+
+  <!-- TAB SII -->
+  <div id="contenidoSii" class="oculto">
+    <div class="container">
+      <div class="container-titulo">🚦 ESTADO SII</div>
+      <div id="gridSii" class="grid-sii"></div>
+      <button class="btn-reset" onclick="resetManual()">🗑️ RESET MANUAL</button>
+    </div>
+  </div>
+
+  <!-- TAB HISTORIAL -->
+  <div id="contenidoHistorial" class="oculto">
+    <div class="container">
+      <div class="container-titulo">📋 ÚLTIMOS COBROS</div>
+      <div id="listaHistorial" style="min-height:200px;text-align:center;color:#666;padding:40px 0">Sin cobros aún</div>
+      <button class="btn btn-generar" style="margin-top:15px" onclick="exportarCSV()">📥 EXPORTAR CSV</button>
+    </div>
+  </div>
+
+  <!-- TAB CUENTAS -->
+  <div id="contenidoCuentas" class="oculto">
+    <div class="container">
+      <div class="container-titulo">🏦 MIS CUENTAS</div>
+      <div id="listaCuentas" class="lista-cuentas"></div>
+      <button class="btn-agregar" onclick="alert('Próximamente')">+ AGREGAR CUENTA</button>
+    </div>
+  </div>
+</div>
+
+<!-- PANTALLA COMPLETA DATOS -->
+<div id="pantallaDatos" class="pantalla-datos oculto">
+  <div class="pantalla-header">
+    <h2>DATOS TRANSFERENCIA</h2>
+    <div class="folio" id="folioGrande"></div>
+  </div>
+  
+  <div class="tabs-datos">
+    <button class="tab-datos activo" id="tabDatosView" onclick="cambiarTabDatos('datos')">📋 DATOS</button>
+    <button class="tab-datos" id="tabAccionesView" onclick="cambiarTabDatos('acciones')">⚡ ACCIONES</button>
+  </div>
+  
+  <div id="contenidoDatosView" class="contenido-datos">
+    <div class="datos-fila">
+      <span class="datos-label">RUT</span>
+      <span class="datos-valor" id="datoRut"></span>
+    </div>
+    <div class="datos-fila">
+      <span class="datos-label">Titular</span>
+      <span class="datos-valor" id="datoTitular"></span>
+    </div>
+    <div class="datos-fila">
+      <span class="datos-label">Banco</span>
+      <span class="datos-valor" id="datoBanco"></span>
+    </div>
+    <div class="datos-fila">
+      <span class="datos-label">Tipo</span>
+      <span class="datos-valor" id="datoTipo"></span>
+    </div>
+    <div class="datos-fila">
+      <span class="datos-label">N° Cuenta</span>
+      <span class="datos-valor" id="datoCuenta"></span>
+    </div>
+    <div class="datos-fila">
+      <span class="datos-label">Monto</span>
+      <span class="datos-valor monto" id="datoMonto"></span>
+    </div>
+    <div class="datos-fila">
+      <span class="datos-label">Ítem</span>
+      <span class="datos-valor" id="datoItem"></span>
+    </div>
+    <div class="datos-fila">
+      <span class="datos-label">Correo</span>
+      <span class="datos-valor correo" id="datoCorreo"></span>
+    </div>
+  </div>
+  
+  <div id="contenidoAccionesView" class="contenido-datos oculto">
+    <button class="btn-copiar" onclick="copiarTodosDatos()">📋 COPIAR TODOS LOS DATOS</button>
+    <button class="btn-premium" id="btnConfirmar" onclick="confirmarTransferencia()">✅ TRANSFERENCIA REALIZADA</button>
+    <button class="btn-premium btn-premium-sec" onclick="volverApp()">⬅️ VOLVER A INICIO</button>
+    <button class="btn-premium btn-premium-sec" onclick="volverApp()">❌ CANCELAR</button>
   </div>
 </div>
 
 <script>
 const USUARIOS = {
   'marcelo': {
-    pass: '123',
-    nombreCompleto: 'MARCELO ANTONIO PEREZ FUENTES',
+    pass: '1971',
+    nombreCompleto: 'MARCELO PEREZ FUENTES',
     rut: '12.082.344-2',
+    correo: 'mperez@emporiodonnino.cl',
     prefijo: 'LWE',
     key: 'marcelo',
     cuentas: [
-      { 
-        id: 'bcoestado', 
-        banco: 'Banco Estado', 
-        tipo: 'CuentaRUT', 
-        numero: '12082344', 
-        numeroFormateado: '12082344',
-        nombre: 'BancoEstado CuentaRUT', 
-        calidad: 'buena', 
-        limite: 45 
-      },
-      { 
-        id: 'bci', 
-        banco: 'BCI', 
-        tipo: 'Cuenta Corriente', 
-        numero: '777912082344', 
-        numeroFormateado: '777912082344',
-        nombre: 'BCI Cuenta Corriente', 
-        calidad: 'buena', 
-        limite: 45 
-      },
-      { 
-        id: 'tenpo', 
-        banco: 'Tenpo', 
-        tipo: 'Cuenta Vista', 
-        numero: '111112082344', 
-        numeroFormateado: '111112082344',
-        nombre: 'Tenpo Vista', 
-        calidad: 'buena', 
-        limite: 45 
-      },
-      { 
-        id: 'chile', 
-        banco: 'Banco de Chile', 
-        tipo: 'Cuenta Vista', 
-        numero: '00344826153', 
-        numeroFormateado: '00-034-48261-53',
-        nombre: 'Banco de Chile Vista', 
-        calidad: 'buena', 
-        limite: 45 
-      }
+      { id: 'tenpo', banco: 'Tenpo', tipo: 'Cuenta Vista', numero: '111112082344', nombre: 'Tenpo', limite: 50 },
+      { id: 'bcoestado', banco: 'Banco Estado', tipo: 'Cuenta Vista', numero: '12082344', nombre: 'Banco Estado', limite: 50 },
+      { id: 'mp', banco: 'Mercado Pago', tipo: 'Cuenta Vista', numero: '1043699387', nombre: 'Mercado Pago', limite: 50 },
+      { id: 'bci', banco: 'BCI', tipo: 'Cuenta Corriente', numero: '777912082344', nombre: 'BCI', limite: 50 },
+      { id: 'chile', banco: 'Banco de Chile', tipo: 'Cuenta Vista', numero: '00-034-48261-53', nombre: 'Banco de Chile', limite: 50 }
     ]
   },
   'nataly': {
-    pass: '123',
-    nombreCompleto: 'NATALY CONTRERAS BUSTOS',
+    pass: '1971',
+    nombreCompleto: 'NATALY OLIVARES MEJIAS',
     rut: '17.737.531-0',
+    correo: 'mperez@emporiodonnino.cl',
     prefijo: 'LWE',
     key: 'nataly',
     cuentas: [
-      { id: 'bcoestado', banco: 'Banco Estado', tipo: 'CuentaRUT', numero: '17737531', numeroFormateado: '17737531', nombre: 'BancoEstado CuentaRUT', calidad: 'buena', limite: 45 },
-      { id: 'tenpo', banco: 'Tenpo', tipo: 'Cuenta Vista', numero: '111117737531', numeroFormateado: '111117737531', nombre: 'Tenpo Vista', calidad: 'buena', limite: 45 }
+      { id: 'bcoestado', banco: 'Banco Estado', tipo: 'Cuenta Vista', numero: '17737531', nombre: 'Banco Estado', limite: 50 },
+      { id: 'tenpo', banco: 'Tenpo', tipo: 'Cuenta Vista', numero: '111117737531', nombre: 'Tenpo', limite: 50 }
     ]
   },
   'krishna': {
-    pass: '123',
-    nombreCompleto: 'KRISHNA VERA CABALLERO',
+    pass: '1971',
+    nombreCompleto: 'KRISHNA OLIVARES HINOJOSA',
     rut: '17.901.095-5',
+    correo: 'mperez@emporiodonnino.cl',
     prefijo: 'LWE',
     key: 'krishna',
     cuentas: [
-      { id: 'bcoestado', banco: 'Banco Estado', tipo: 'CuentaRUT', numero: '17901095', numeroFormateado: '17901095', nombre: 'BancoEstado CuentaRUT', calidad: 'buena', limite: 45 },
-      { id: 'tenpo', banco: 'Tenpo', tipo: 'Cuenta Vista', numero: '111117901095', numeroFormateado: '111117901095', nombre: 'Tenpo Vista', calidad: 'buena', limite: 45 }
+      { id: 'bcoestado', banco: 'Banco Estado', tipo: 'Cuenta Vista', numero: '17901095', nombre: 'Banco Estado', limite: 50 },
+      { id: 'tenpo', banco: 'Tenpo', tipo: 'Cuenta Vista', numero: '111117901095', nombre: 'Tenpo', limite: 50 }
     ]
   }
 };
@@ -253,15 +312,14 @@ const DB = {
 };
 
 let usuarioActual = null;
-let esPrueba = false;
 let ventaPendiente = null;
-let tabActual = 'qr';
+let esPrueba = false;
 
 function mostrarAlerta(msg, tipo = 'ok', cont = 'alertaMain') {
   const el = document.getElementById(cont);
-  const clase = tipo === 'ok'? 'alerta-ok' : tipo === 'error'? 'alerta-error' : tipo === 'warning'? 'alerta-warning' : 'alerta-info';
+  const clase = tipo === 'ok'? 'alerta-ok' : tipo === 'error'? 'alerta-error' : 'alerta-warning';
   el.innerHTML = `<div class="alerta ${clase}">${msg}</div>`;
-  setTimeout(() => el.innerHTML = '', 6000);
+  setTimeout(() => el.innerHTML = '', 5000);
 }
 
 function login() {
@@ -273,46 +331,41 @@ function login() {
     return;
   }
   usuarioActual = USUARIOS[u];
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('mainScreen').style.display = 'block';
-  document.getElementById('usuarioInfo').innerHTML = `<b>${usuarioActual.nombreCompleto}</b><br>RUT: ${usuarioActual.rut}`;
+  document.getElementById('loginScreen').classList.add('oculto');
+  document.getElementById('mainScreen').classList.remove('oculto');
+  document.getElementById('usuarioHeader').textContent = `Usuario: ${usuarioActual.nombreCompleto.split(' ')[0]}`;
   cargarBancos();
   actualizarSemaforo();
+  cargarSii();
+  cargarCuentas();
+  cargarHistorial();
 }
 
 function logout() {
   usuarioActual = null;
-  esPrueba = false;
-  document.body.classList.remove('modo-prueba');
-  document.getElementById('loginScreen').style.display = 'block';
-  document.getElementById('mainScreen').style.display = 'none';
+  document.getElementById('loginScreen').classList.remove('oculto');
+  document.getElementById('mainScreen').classList.add('oculto');
   document.getElementById('usuario').value = '';
   document.getElementById('password').value = '';
-  cancelarQR();
 }
 
 function cargarBancos() {
   const sel = document.getElementById('banco');
-  sel.innerHTML = '<option value="">Selecciona cuenta destino...</option>';
+  sel.innerHTML = '';
   usuarioActual.cuentas.forEach(c => {
     const cont = getContadorBanco(c.id);
     let clase = 'cuenta-buena';
-    let estado = '✅ OK';
     
     if (cont.mensual >= c.limite) {
       clase = 'cuenta-llena';
-      estado = `⛔ BLOQUEADO ${c.limite}/${c.limite}`;
-    } else if (cont.mensual >= c.limite - 5) {
-      clase = 'cuenta-llena';
-      estado = `⚠️ CASI ${c.limite}`;
     }
     
-    sel.innerHTML += `<option value="${c.id}" class="${clase}">${c.nombre} (${cont.mensual}/${c.limite}) ${estado}</option>`;
+    sel.innerHTML += `<option value="${c.id}" class="${clase}">${c.nombre} - ${c.tipo}</option>`;
   });
 }
 
 function getContadorBanco(bancoId) {
-  const ventas = DB.getVentas(usuarioActual.key).filter(v => v.bancoId === bancoId && !v.prueba);
+  const ventas = DB.getVentas(usuarioActual.key).filter(v => v.bancoId === bancoId &&!v.prueba);
   const ahora = new Date();
   const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
   const inicioSem = new Date(ahora.getFullYear(), ahora.getMonth() >= 6? 6 : 0, 1);
@@ -324,207 +377,192 @@ function getContadorBanco(bancoId) {
 
 function actualizarSemaforo() {
   const bancoId = document.getElementById('banco').value;
-  if (!bancoId) {
-    document.getElementById('semMensual').textContent = '0/45';
-    document.getElementById('semSemestral').textContent = '0/100';
-    return;
-  }
+  if (!bancoId) return;
   const c = getContadorBanco(bancoId);
   const cuenta = usuarioActual.cuentas.find(cta => cta.id === bancoId);
-  const m = document.getElementById('semMensual');
-  const s = document.getElementById('semSemestral');
-  m.textContent = `${c.mensual}/${cuenta.limite}`;
-  s.textContent = `${c.semestral}/100`;
-  m.className = 'semaforo-valor ' + (c.mensual >= cuenta.limite - 5? 'rojo' : c.mensual >= cuenta.limite - 15? 'amarillo' : 'verde');
-  s.className = 'semaforo-valor ' + (c.semestral >= 90? 'rojo' : c.semestral >= 70? 'amarillo' : 'verde');
+  document.getElementById('semaforoNombre').textContent = cuenta.nombre.toUpperCase();
+  document.getElementById('semaforoCont').textContent = `${c.mensual}/${cuenta.limite} mes | ${c.semestral}/100 sem`;
+  const box = document.getElementById('semaforoBanco');
+  box.style.borderColor = c.mensual >= cuenta.limite - 5? '#ff3333' : c.mensual >= cuenta.limite - 15? '#ffcc00' : '#00ff00';
 }
 
-function generarQR(prueba) {
-  const bancoId = document.getElementById('banco').value;
-  const monto = parseInt(document.getElementById('monto').value);
-  const ref = document.getElementById('referencia').value.trim();
-
-  if (!bancoId) { mostrarAlerta('⚠️ Selecciona una cuenta destino', 'error'); return; }
-  if (!monto || monto < 100) { mostrarAlerta('⚠️ Monto mínimo $100', 'error'); return; }
-
-  esPrueba = prueba;
-  document.body.classList.toggle('modo-prueba', prueba);
-
-  if (!prueba) {
-    const cont = getContadorBanco(bancoId);
-    const cuenta = usuarioActual.cuentas.find(c => c.id === bancoId);
-    if (cont.mensual >= cuenta.limite) { 
-      mostrarAlerta(`⛔ BLOQUEADO. ${cuenta.nombre} llegó a ${cuenta.limite}/${cuenta.limite}. Usa otra cuenta.`, 'error'); 
-      cargarBancos(); 
-      return; 
-    }
-  }
-
-  const cuenta = usuarioActual.cuentas.find(c => c.id === bancoId);
-  const folio = prueba? 'PRUEBA' : `${usuarioActual.prefijo}-${String(DB.getFolio(usuarioActual.key) + 1).padStart(3, '0')}`;
-
-  const codigosBanco = { 'Banco Estado': '037', 'BCI': '016', 'Banco de Chile': '001', 'Tenpo': '051' };
-  const tiposCuenta = { 'CuentaRUT': 'CTARUT', 'Cuenta Corriente': 'CTACTE', 'Cuenta Vista': 'CTAVIS' };
-
-  const codBanco = codigosBanco[cuenta.banco];
-  const codTipo = tiposCuenta[cuenta.tipo];
-  const rutSinPuntos = usuarioActual.rut.replace(/\./g, '');
-
-  // QR usa numero sin guiones
-  const textoQR = `TRANSFERENCIA
-RUT:${rutSinPuntos}
-NOMBRE:${usuarioActual.nombreCompleto}
-BANCO:${codBanco}
-TIPO:${codTipo}
-CUENTA:${cuenta.numero}
-MONTO:${monto}
-REF:${folio}`;
-
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(textoQR)}`;
-  
-  ventaPendiente = { bancoId, cuenta, monto, ref, folio, fecha: new Date().toISOString(), prueba };
-
-  document.getElementById('badgeContainer').innerHTML = prueba
-    ? '<div class="modo-prueba-badge">🟢 MODO PRUEBA</div>'
-    : `<div class="folio-badge">${folio}</div>`;
-  document.getElementById('montoDisplay').textContent = `$${monto.toLocaleString('es-CL')}`;
-  document.getElementById('qrImagen').src = qrUrl;
-  
-  // TAB QR - datos técnicos sin guiones
-  document.getElementById('datosQR').innerHTML = `
-    <b>Cuenta:</b> ${cuenta.nombre}<br>
-    <b>Banco:</b> ${cuenta.banco} (${codBanco})<br>
-    <b>Tipo:</b> ${codTipo}<br>
-    <b>N° Cuenta:</b> ${cuenta.numero}<br>
-    <b>RUT:</b> ${rutSinPuntos}<br>
-    <b>Monto:</b> $${monto.toLocaleString('es-CL')}<br>
-    <b>Ref:</b> ${folio}<br>
-    ${ref? `<b>Nota:</b> ${ref}<br>` : ''}
-    <br>
-    <b style="color:#00ff00">✅ QR técnico - Sin guiones</b>
-  `;
-  
-  // TAB MANUAL - como lo manda el banco con guiones
-  document.getElementById('datosManual').innerHTML = `
-    <div class="fila">
-      <span class="label">Nombre:</span>
-      <span class="valor">${usuarioActual.nombreCompleto}</span>
-    </div>
-    <div class="fila">
-      <span class="label">RUT:</span>
-      <span class="valor">${usuarioActual.rut}</span>
-    </div>
-    <div class="fila">
-      <span class="label">Banco:</span>
-      <span class="valor">${cuenta.banco}</span>
-    </div>
-    <div class="fila">
-      <span class="label">Tipo Cuenta:</span>
-      <span class="valor">${cuenta.tipo}</span>
-    </div>
-    <div class="fila">
-      <span class="label">N° Cuenta:</span>
-      <span class="valor">${cuenta.numeroFormateado}</span>
-    </div>
-    <div class="fila">
-      <span class="label">Monto:</span>
-      <span class="valor">$${monto.toLocaleString('es-CL')}</span>
-    </div>
-    <div class="fila">
-      <span class="label">Referencia:</span>
-      <span class="valor">${folio}</span>
-    </div>
-  `;
-
-  document.getElementById('btnConfirmar').style.display = prueba? 'none' : 'block';
-  document.getElementById('btnCancelar').style.display = prueba? 'none' : 'block';
-  document.getElementById('btnSalirPrueba').classList.toggle('oculto',!prueba);
-  document.getElementById('qrContainer').classList.remove('oculto');
-  cambiarTab('qr');
-  document.getElementById('qrContainer').scrollIntoView({ behavior: 'smooth' });
-
-  mostrarAlerta('✅ Pago listo - QR técnico + Datos banco', 'info');
-}
-
-function cambiarTab(tab) {
-  tabActual = tab;
-  document.getElementById('tabQR').classList.toggle('activo', tab === 'qr');
-  document.getElementById('tabManual').classList.toggle('activo', tab === 'manual');
-  document.getElementById('contenidoQR').classList.toggle('oculto', tab !== 'qr');
-  document.getElementById('contenidoManual').classList.toggle('oculto', tab !== 'manual');
-}
-
-function copiarDatos() {
-  if (!ventaPendiente) return;
-  const cuenta = ventaPendiente.cuenta;
-  const texto = `Nombre: ${usuarioActual.nombreCompleto}
-RUT: ${usuarioActual.rut}
-Banco: ${cuenta.banco}
-Tipo: ${cuenta.tipo}
-N° Cuenta: ${cuenta.numeroFormateado}
-Monto: $${ventaPendiente.monto.toLocaleString('es-CL')}
-Referencia: ${ventaPendiente.folio}`;
-  
-  navigator.clipboard.writeText(texto).then(() => {
-    mostrarAlerta('✅ Datos del banco copiados', 'ok');
-  }).catch(() => {
-    mostrarAlerta('⚠️ Copia manual los datos de arriba', 'info');
+function cambiarTabMain(tab) {
+  ['cobrar','sii','historial','cuentas'].forEach(t => {
+    document.getElementById(`tab${t.charAt(0).toUpperCase()+t.slice(1)}`).classList.toggle('activo', t === tab);
+    document.getElementById(`contenido${t.charAt(0).toUpperCase()+t.slice(1)}`).classList.toggle('oculto', t!== tab);
   });
 }
 
-function confirmarVenta() {
-  if (!ventaPendiente || esPrueba) return;
-  DB.addVenta(usuarioActual.key, ventaPendiente);
-  DB.setFolio(usuarioActual.key, DB.getFolio(usuarioActual.key) + 1);
-  const nuevoCont = getContadorBanco(ventaPendiente.bancoId).mensual + 1;
-  const limite = ventaPendiente.cuenta.limite;
-  mostrarAlerta(`✅ Pago confirmado. ${ventaPendiente.cuenta.nombre}: ${nuevoCont}/${limite}`, 'ok');
-  cancelarQR();
-  cargarBancos();
-  actualizarSemaforo();
-  document.getElementById('monto').value = '';
-  document.getElementById('referencia').value = '';
+function cambiarTabDatos(tab) {
+  document.getElementById('tabDatosView').classList.toggle('activo', tab === 'datos');
+  document.getElementById('tabAccionesView').classList.toggle('activo', tab === 'acciones');
+  document.getElementById('contenidoDatosView').classList.toggle('oculto', tab!== 'datos');
+  document.getElementById('contenidoAccionesView').classList.toggle('oculto', tab!== 'acciones');
 }
 
-function cancelarQR() {
-  document.getElementById('qrContainer').classList.add('oculto');
+function generarDatos(prueba) {
+  const bancoId = document.getElementById('banco').value;
+  const monto = parseInt(document.getElementById('monto').value);
+  const ref = document.getElementById('referencia').value;
+
+  if (!bancoId) { mostrarAlerta('⚠️ Selecciona un banco destino', 'error'); return; }
+  if (!monto || monto < 100) { mostrarAlerta('⚠️ Monto mínimo $100', 'error'); return; }
+  if (!ref) { mostrarAlerta('⚠️ Selecciona una referencia', 'error'); return; }
+
+  esPrueba = prueba;
+  const cont = getContadorBanco(bancoId);
+  const cuenta = usuarioActual.cuentas.find(c => c.id === bancoId);
+  
+  if (!prueba && cont.mensual >= cuenta.limite) { 
+    mostrarAlerta(`⛔ BLOQUEADO. ${cuenta.nombre} llegó a ${cuenta.limite}/${cuenta.limite}`, 'error'); 
+    cargarBancos(); 
+    return; 
+  }
+
+  const folio = prueba? 'PRUEBA' : `${usuarioActual.prefijo}-${String(DB.getFolio(usuarioActual.key) + 1).padStart(3, '0')}`;
+  const emoji = ref === 'Empanada'? '🥟' : ref === 'Lata'? '🥫' : '🍽️';
+  
+  ventaPendiente = { bancoId, cuenta, monto, item: ref, folio, fecha: new Date().toISOString(), prueba };
+
+  document.getElementById('folioGrande').textContent = folio;
+  document.getElementById('datoRut').textContent = usuarioActual.rut;
+  document.getElementById('datoTitular').textContent = usuarioActual.nombreCompleto;
+  document.getElementById('datoBanco').textContent = cuenta.banco;
+  document.getElementById('datoTipo').textContent = cuenta.tipo;
+  document.getElementById('datoCuenta').textContent = cuenta.numero;
+  document.getElementById('datoMonto').textContent = `$${monto.toLocaleString('es-CL')}`;
+  document.getElementById('datoItem').textContent = ref + ' ' + emoji;
+  document.getElementById('datoCorreo').textContent = usuarioActual.correo;
+
+  document.getElementById('btnConfirmar').style.display = prueba? 'none' : 'block';
+  cambiarTabDatos('datos');
+  document.getElementById('pantallaDatos').classList.remove('oculto');
+}
+
+function copiarTodosDatos() {
+  if (!ventaPendiente) return;
+  const c = ventaPendiente.cuenta;
+  const texto = `RUT: ${usuarioActual.rut}
+Titular: ${usuarioActual.nombreCompleto}
+Banco: ${c.banco}
+Tipo: ${c.tipo}
+N° Cuenta: ${c.numero}
+Monto: $${ventaPendiente.monto.toLocaleString('es-CL')}
+Ítem: ${ventaPendiente.item}
+Correo: ${usuarioActual.correo}
+Ref: ${ventaPendiente.folio}`;
+  
+  navigator.clipboard.writeText(texto).then(() => {
+    alert('✅ Datos copiados');
+  });
+}
+
+function confirmarTransferencia() {
+  if (!ventaPendiente || esPrueba) return;
+  
+  DB.addVenta(usuarioActual.key, ventaPendiente);
+  DB.setFolio(usuarioActual.key, DB.getFolio(usuarioActual.key) + 1);
+  
+  const nuevoCont = getContadorBanco(ventaPendiente.bancoId).mensual;
+  const limite = ventaPendiente.cuenta.limite;
+  
+  alert(`✅ Transferencia registrada\n${ventaPendiente.cuenta.nombre}: ${nuevoCont}/${limite}`);
+  
+  volverApp();
+  cargarBancos();
+  actualizarSemaforo();
+  cargarSii();
+  cargarHistorial();
+  document.getElementById('monto').value = '';
+}
+
+function volverApp() {
+  document.getElementById('pantallaDatos').classList.add('oculto');
   ventaPendiente = null;
 }
 
-function salirModoPrueba() {
-  esPrueba = false;
-  document.body.classList.remove('modo-prueba');
-  cancelarQR();
-  mostrarAlerta('✅ Modo prueba desactivado', 'info');
+function cargarSii() {
+  const grid = document.getElementById('gridSii');
+  grid.innerHTML = '';
+  usuarioActual.cuentas.forEach(c => {
+    const cont = getContadorBanco(c.id);
+    let clase = 'card-sii';
+    if (cont.mensual >= c.limite - 5) clase += ' rojo';
+    else if (cont.mensual >= c.limite - 15) clase += ' amarillo';
+    
+    grid.innerHTML += `
+      <div class="${clase}">
+        <div class="card-sii-nombre">${c.nombre}</div>
+        <div class="card-sii-mes">${cont.mensual}/${c.limite}</div>
+        <div class="card-sii-sem">${cont.semestral}/100 sem</div>
+      </div>
+    `;
+  });
 }
 
-function verHistorial() {
+function cargarCuentas() {
+  const lista = document.getElementById('listaCuentas');
+  lista.innerHTML = '';
+  usuarioActual.cuentas.forEach(c => {
+    lista.innerHTML += `
+      <div class="cuenta-item">
+        <div class="cuenta-info">
+          <div class="cuenta-nombre">${c.nombre} - ${c.tipo}</div>
+          <div class="cuenta-numero">${c.numero}</div>
+        </div>
+        <button class="btn-eliminar" onclick="alert('Función eliminar próximamente')">ELIMINAR</button>
+      </div>
+    `;
+  });
+}
+
+function cargarHistorial() {
   const ventas = DB.getVentas(usuarioActual.key).slice(0, 20);
   const lista = document.getElementById('listaHistorial');
   if (ventas.length === 0) {
-    lista.innerHTML = '<p style="text-align:center;color:#888;padding:20px">Sin ventas</p>';
+    lista.innerHTML = '<div style="text-align:center;color:#666;padding:40px 0">Sin cobros aún</div>';
   } else {
     lista.innerHTML = ventas.map(v => `
-      <div style="padding:12px;border-bottom:1px solid #333;font-size:12px">
-        <b style="color:#00ff00">${v.folio}</b> ${v.prueba? '<span style="color:#00ccff">(PRUEBA)</span>' : ''}<br>
-        <span style="color:#00ff00;font-size:16px">$${v.monto.toLocaleString('es-CL')}</span> → ${v.cuenta.nombre}<br>
-        <span style="color:#888">${new Date(v.fecha).toLocaleString('es-CL')}</span>
-        ${v.ref? `<br><span style="color:#aaa">📝 ${v.ref}</span>` : ''}
+      <div style="padding:15px;border-bottom:2px solid #333;font-size:13px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <b style="color:#ff6600">${v.folio}</b>
+          <span style="color:#00ff00;font-size:16px;font-weight:bold">$${v.monto.toLocaleString('es-CL')}</span>
+        </div>
+        <div style="color:#aaa">${v.cuenta.nombre} • ${new Date(v.fecha).toLocaleString('es-CL')}</div>
+        <div style="color:#888;margin-top:3px">${v.item === 'Empanada'? '🥟' : v.item === 'Lata'? '🥫' : '🍽️'} ${v.item} ${v.prueba? '<span style="color:#0099ff">(PRUEBA)</span>' : ''}</div>
       </div>
     `).join('');
   }
-  document.getElementById('historialContainer').classList.remove('oculto');
 }
 
-function cerrarHistorial() {
-  document.getElementById('historialContainer').classList.add('oculto');
+function resetManual() {
+  if (confirm('¿Resetear todos los contadores? Esto no se puede deshacer.')) {
+    localStorage.clear();
+    alert('✅ Contadores reseteados');
+    location.reload();
+  }
+}
+
+function exportarCSV() {
+  const ventas = DB.getVentas(usuarioActual.key);
+  if (ventas.length === 0) { alert('No hay datos'); return; }
+  let csv = 'Folio,Fecha,Monto,Banco,Cuenta,Item\n';
+  ventas.forEach(v => {
+    csv += `${v.folio},${v.fecha},$${v.monto},${v.cuenta.banco},${v.cuenta.numero},${v.item}\n`;
+  });
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `lwe_${usuarioActual.key}_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
 }
 
 document.getElementById('password').addEventListener('keypress', (e) => {
   if (e.key === 'Enter') login();
 });
 document.getElementById('monto').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') generarQR(false);
+  if (e.key === 'Enter') generarDatos(false);
 });
 </script>
 </body>
